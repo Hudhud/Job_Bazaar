@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "865004633478",
+    "firebase_url": "https://job-bazaar.firebaseio.com",
+    "project_id": "job-bazaar",
+    "storage_bucket": "job-bazaar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865004633478:android:529faf4dd3a15c1cdd4007",
+        "android_client_info": {
+          "package_name": "edu.sss.job_bazaar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865004633478-th6pkfhahrucsr2npqqcdlo1mt6jfibh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865004633478-th6pkfhahrucsr2npqqcdlo1mt6jfibh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
