@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_bazaar/auth.dart';
-import 'package:job_bazaar/signup_page.dart';
+import 'package:job_bazaar/guest_page.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Job Bazaar',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: FutureBuilder<FirebaseUser>(
         future: Provider.of<AuthService>(context).getUser(),
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               print("error");
               return Text(snapshot.error.toString());
             }
-            return snapshot.hasData ? HomePage(snapshot.data) : SignupPage();
+            return snapshot.hasData ? HomePage(snapshot.data) : GuestPage();
           } else {
             return LoadingCircle();
           }
