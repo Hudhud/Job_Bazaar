@@ -11,7 +11,6 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   String _password;
-  String _confirmPassowrd;
   String _email;
 
   @override
@@ -41,7 +40,6 @@ class _SignupPageState extends State<SignupPage> {
                     obscureText: true,
                     decoration: InputDecoration(labelText: "Password")),
                 TextFormField(
-                    onSaved: (value) => _confirmPassowrd = value,
                     obscureText: true,
                     decoration: InputDecoration(labelText: "Confirm password"),
                     validator: (value) => value == _password ? null : "password not the same.",
