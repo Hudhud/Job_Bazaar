@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:job_bazaar/auth.dart';
 import 'package:provider/provider.dart';
 
-class SignupPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _password;
   String _email;
@@ -39,14 +39,9 @@ class _SignupPageState extends State<SignupPage> {
                     onSaved: (value) => _password = value,
                     obscureText: true,
                     decoration: InputDecoration(labelText: "Password")),
-                TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Confirm password"),
-                    validator: (value) => value == _password ? null : "password not the same.",
-                    ),
                 SizedBox(height: 20.0),
                 RaisedButton(
-                  child: Text("SIGN UP"),
+                  child: Text("Login"),
                   onPressed: () async {
                     final form = _formKey.currentState;
                     form.save();
@@ -55,7 +50,7 @@ class _SignupPageState extends State<SignupPage> {
                       try {
                         FirebaseUser result =
                             await Provider.of<AuthService>(context)
-                                .signUpUser(email: _email, password: _password);
+                                .loginUser(email: _email, password: _password);
                         print(result);
                         Navigator.pop(context);
                       } on AuthException catch (error) {
