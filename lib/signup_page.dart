@@ -11,6 +11,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   String _password;
+  String _confirmPassowrd;
   String _email;
 
   @override
@@ -30,15 +31,21 @@ class _SignupPageState extends State<SignupPage> {
                   'Sign up Information',
                   style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(height: 20.0), 
+                SizedBox(height: 20.0),
                 TextFormField(
-                    onSaved: (value) => _email = value, 
+                    onSaved: (value) => _email = value,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(labelText: "Email Address")),
                 TextFormField(
                     onSaved: (value) => _password = value,
                     obscureText: true,
                     decoration: InputDecoration(labelText: "Password")),
+                TextFormField(
+                    onSaved: (value) => _confirmPassowrd = value,
+                    obscureText: true,
+                    decoration: InputDecoration(labelText: "Confirm password"),
+                    validator: (value) => value == _password ? null : "password not the same.",
+                    ),
                 SizedBox(height: 20.0),
                 RaisedButton(
                   child: Text("SIGN UP"),
