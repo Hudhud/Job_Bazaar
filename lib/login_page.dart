@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:job_bazaar/auth.dart';
+import 'package:job_bazaar/signup_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign up"),
+        title: Text("Login"),
       ),
       body: Container(
           padding: EdgeInsets.all(20.0),
@@ -27,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 SizedBox(height: 20.0),
                 Text(
-                  'Sign up Information',
+                  'Login',
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 20.0),
@@ -35,6 +37,18 @@ class _LoginPageState extends State<LoginPage> {
                     onSaved: (value) => _email = value,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(labelText: "Email Address")),
+                SizedBox(height: 20.0),
+                Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Forgot password?',
+                            style: TextStyle(
+                                color: Colors.blueAccent, fontSize: 16),
+                          ),
+                        ))),
                 TextFormField(
                     onSaved: (value) => _password = value,
                     obscureText: true,
@@ -52,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                             await Provider.of<AuthService>(context)
                                 .loginUser(email: _email, password: _password);
                         print(result);
-                        Navigator.pop(context);
                       } on AuthException catch (error) {
                         return _buildErrorDialog(context, error.message);
                       } on Exception catch (error) {
@@ -61,6 +74,29 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
+                Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Don\'t have an account?',
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: ' Sign up',
+                                  style: TextStyle(
+                                      color: Colors.blueAccent, fontSize: 16),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SignupPage()),
+                                      );
+                                    })
+                            ]),
+                      ),
+                    ))
               ],
             ),
           )),
@@ -76,6 +112,25 @@ class _LoginPageState extends State<LoginPage> {
           actions: <Widget>[
             FlatButton(
                 child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })
+          ],
+        );
+      },
+      context: context,
+    );
+  }
+
+  Future _buildMailSendDialog(BuildContext context, _message) {
+    return showDialog(
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Mail send'),
+          content: Text(_message),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('Okay'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 })

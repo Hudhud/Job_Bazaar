@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:job_bazaar/auth.dart';
-import 'package:job_bazaar/guest_page.dart';
+import 'package:job_bazaar/login_page.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-
-// import 'package:job_bazaar/signup_page.dart';
 
 void main() => runApp(
       ChangeNotifierProvider<AuthService>(
@@ -19,7 +17,6 @@ void main() => runApp(
     );
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +30,7 @@ class MyApp extends StatelessWidget {
               print("error");
               return Text(snapshot.error.toString());
             }
-            return snapshot.hasData ? HomePage(snapshot.data) : GuestPage();
+            return snapshot.hasData ? HomePage(snapshot.data) : LoginPage();
           } else {
             return LoadingCircle();
           }
