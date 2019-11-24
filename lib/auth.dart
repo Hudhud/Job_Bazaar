@@ -57,7 +57,7 @@ class AuthService with ChangeNotifier {
   /// `email` String
   /// `password` String
   ///
-  Future sendPasswordResetEmail({String email}) async {
+  Future<void> sendPasswordResetEmail({String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     }  catch (e) {

@@ -15,6 +15,9 @@ class _LoginPageState extends State<LoginPage> {
   String _password;
   String _email;
 
+  final _resetPassFormKey = GlobalKey<FormState>();
+  String _resetPassEmail;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +47,13 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.bottomRight,
                         child: RichText(
                           text: TextSpan(
-                            text: 'Forgot password?',
-                            style: TextStyle(
-                                color: Colors.blueAccent, fontSize: 16),
-                          ),
+                              text: 'Forgot password?',
+                              style: TextStyle(
+                                  color: Colors.blueAccent, fontSize: 16),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  _buildMailSendDialog(context);
+                                }),
                         ))),
                 TextFormField(
                     onSaved: (value) => _password = value,
@@ -122,16 +128,36 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future _buildMailSendDialog(BuildContext context, _message) {
+  Future _buildMailSendDialog(BuildContext context) {
     return showDialog(
       builder: (context) {
         return AlertDialog(
           title: Text('Mail send'),
-          content: Text(_message),
+          content: Form(
+            key: _resetPassFormKey,
+            child: TextFormField(
+                onSaved: (value) => _resetPassEmail = value,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(labelText: "Email Address")),
+          ),
           actions: <Widget>[
             FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
+                child: Text('Send'),
+                onPressed: () async {
+                  final form = _resetPassFormKey.currentState;
+                  form.save();
+
+                  if (form.validate()) {
+                    try {
+                      // send email
+                      await Provider.of<AuthService>(context).sendPasswordResetEmail(email: _resetPassEmail);
+                    } on AuthException catch (error) {
+                      return _buildErrorDialog(context, error.message);
+                    } on Exception catch (error) {
+                      return _buildErrorDialog(context, error.toString());
+                    }
+                  }
+
                   Navigator.of(context).pop();
                 })
           ],
