@@ -57,6 +57,7 @@ class _SignupPageState extends State<SignupPage> {
                             await Provider.of<AuthService>(context)
                                 .signUpUser(email: _email, password: _password);
                         print(result);
+                        Navigator.pop(context);
                       } on AuthException catch (error) {
                         return _buildErrorDialog(context, error.message);
                       } on Exception catch (error) {

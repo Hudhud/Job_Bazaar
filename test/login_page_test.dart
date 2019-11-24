@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:job_bazaar/guest_page.dart';
+import 'package:job_bazaar/login_page.dart';
 
 Widget testWidget = new MediaQuery(
       data: new MediaQueryData(),
-      child: new MaterialApp(home: new GuestPage())
+      child: new MaterialApp(home: LoginPage())
 );
 
 void main() {
@@ -13,6 +13,6 @@ void main() {
     await tester.pumpWidget(testWidget);
 
     expect(find.widgetWithText(RaisedButton, 'Login'), findsOneWidget);
-    expect(find.widgetWithText(RaisedButton, 'Sign Up'), findsOneWidget);
+    expect(find.text('Login'), findsNWidgets(3));
   });
 }
