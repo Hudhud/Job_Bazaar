@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:job_bazaar/auth.dart';
-import 'package:job_bazaar/tasks_page.dart';
 import 'package:provider/provider.dart';
+import 'package:job_bazaar/tasks_page.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser currentUser;
@@ -44,13 +44,14 @@ class _HomePageState extends State<HomePage> {
                 await Provider.of<AuthService>(context).logout();
               }),
           RaisedButton(
-              child: Text("MY TASKS"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
-                );
-              }),
+            child: Text("MY TASKS"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TasksPage()),
+              );
+            },
+          ),
         ],
       )),
     );
