@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_bazaar/task.dart';
 
 class TasksPage extends StatelessWidget {
   @override
@@ -7,49 +9,35 @@ class TasksPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("My Tasks"),
         ),
-        body: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 1'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 2'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 3'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 4'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 5'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 6'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 7'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 8'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 9'),
-            ),
-            ListTile(
-              leading: Icon(Icons.business_center),
-              title: Text('Job 10'),
-            )
-          ],
-        ));
+        body: Center(
+          child: Container(
+              padding: const EdgeInsets.all(10.0),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: Firestore.instance.collection('tasks').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return new Text('Loading...');
+                    default:
+                      return new ListView(
+                        children: snapshot.data.documents
+                            .map((DocumentSnapshot document) {
+                          return new Task(
+                            date: document['date'],
+                            description: document['description'],
+                            hourly: document['hourly'],
+                            payment: document['payment'],
+                            title: document['title'],
+                          );
+                        }).toList(),
+                      );
+                  }
+                },
+              )),
+        ),
+        );
   }
 }

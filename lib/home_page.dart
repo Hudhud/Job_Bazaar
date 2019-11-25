@@ -45,13 +45,14 @@ class _HomePageState extends State<HomePage> {
                 await Provider.of<AuthService>(context).logout();
               }),
           RaisedButton(
-              child: Text("MY TASKS"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
-                );
-              }),
+            child: Text("MY TASKS"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TasksPage()),
+              );
+            },
+          ),
         ],
       )),
       floatingActionButton: FloatingActionButton(

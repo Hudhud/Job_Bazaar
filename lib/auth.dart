@@ -19,7 +19,7 @@ class AuthService with ChangeNotifier {
     notifyListeners();
     return result;
   }
-  
+
   ///
   /// wrapping the firebase call to signInWithEmailAndPassword
   /// `email` String
@@ -31,7 +31,7 @@ class AuthService with ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
       return result.user;
-    }  catch (e) {
+    } catch (e) {
       throw new AuthException(e.code, e.message);
     }
   }
@@ -47,7 +47,7 @@ class AuthService with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password);
       notifyListeners();
       return result.user;
-    }  catch (e) {
+    } catch (e) {
       throw new AuthException(e.code, e.message);
     }
   }
@@ -60,7 +60,7 @@ class AuthService with ChangeNotifier {
   Future<void> sendPasswordResetEmail({String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    }  catch (e) {
+    } catch (e) {
       throw new AuthException(e.code, e.message);
     }
   }

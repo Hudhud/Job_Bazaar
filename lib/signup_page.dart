@@ -40,10 +40,11 @@ class _SignupPageState extends State<SignupPage> {
                     obscureText: true,
                     decoration: InputDecoration(labelText: "Password")),
                 TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Confirm password"),
-                    validator: (value) => value == _password ? null : "password not the same.",
-                    ),
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: "Confirm password"),
+                  validator: (value) =>
+                      value == _password ? null : "password not the same.",
+                ),
                 SizedBox(height: 20.0),
                 RaisedButton(
                   child: Text("SIGN UP"),
