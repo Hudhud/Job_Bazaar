@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:place_picker/place_picker.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   CreateTaskScreen({Key key}) : super(key: key);
@@ -18,6 +19,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String _description;
   String _payment;
   DateTime _date;
+  final _locationTextFieldsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +44,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Title"),
                     onSaved: (value) => _title = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Description"),
                     onSaved: (value) => _description = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                     maxLines: null,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: "Payment (DKK)"),
                     validator: (value) {
-                      if(value == null) {
+                      if (value == null) {
                         return null;
                       }
                       final n = num.tryParse(value);
-                      if(n == null) {
+                      if (n == null) {
                         return '"$value" is not a valid number';
                       }
                       return null;
@@ -70,7 +74,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     format: DateFormat("yyyy-MM-dd HH:mm"),
                     decoration: InputDecoration(labelText: "Date & Time"),
                     onSaved: (value) => _date = value,
-                    validator: (value) => value.compareTo(DateTime.now()) > 0 ? null : 'Pick a later time',
+                    validator: (value) => value.compareTo(DateTime.now()) > 0
+                        ? null
+                        : 'Pick a later time',
                     onShowPicker: (context, currentValue) async {
                       final date = await showDatePicker(
                           context: context,
@@ -88,6 +94,41 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         return currentValue;
                       }
                     },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(Icons.location_searching),
+                                onPressed: () async {
+                                  LocationResult result = await Navigator.of(
+                                          context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) => PlacePicker(
+                                              'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
+
+                                  // Handle the result in your way
+                                  print(result.formattedAddress);
+                                  _locationTextFieldsController.text =
+                                      result.formattedAddress;
+                                }),
+                            Expanded(
+                              child: TextField(
+                                controller: _locationTextFieldsController,
+                                enabled: false,
+                                maxLines: null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -128,7 +169,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           return _buildErrorDialog(context, error.toString());
                         }
                       }
-
                     },
                   ),
                 ],
