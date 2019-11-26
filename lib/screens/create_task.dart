@@ -1,4 +1,5 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +161,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
                       if (form.validate()) {
                         try {
+                          FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
                           await Firestore.instance.collection('tasks').add({
                             'hourly': _hourly,
                             'title': _title,
@@ -167,6 +170,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             'payment': double.parse(_payment),
                             'date': _date,
                             'place_id': _location.placeId,
+                            'creator': user.uid,
                           });
                           Navigator.of(context).pop();
                         } on Exception catch (error) {
