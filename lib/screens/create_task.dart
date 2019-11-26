@@ -27,7 +27,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-            color: Colors.white,
             padding: EdgeInsets.all(20.0),
             child: Form(
               key: _formKey,
@@ -43,26 +42,24 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Title"),
                     onSaved: (value) => _title = value,
-                    validator: (value) =>
-                        value != "" ? null : "All fields are required",
+                    validator: (value) => value != ""? null : "All fields are required",
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Description"),
                     onSaved: (value) => _description = value,
-                    validator: (value) =>
-                        value != "" ? null : "All fields are required",
+                    validator: (value) => value != ""? null : "All fields are required",
                     maxLines: null,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: "Payment (DKK)"),
                     validator: (value) {
-                      if (value == null) {
+                      if(value == null) {
                         return null;
                       }
                       final n = num.tryParse(value);
-                      if (n == null) {
+                      if(n == null) {
                         return '"$value" is not a valid number';
                       }
                       return null;
@@ -73,9 +70,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     format: DateFormat("yyyy-MM-dd HH:mm"),
                     decoration: InputDecoration(labelText: "Date & Time"),
                     onSaved: (value) => _date = value,
-                    validator: (value) => value.compareTo(DateTime.now()) > 0
-                        ? null
-                        : 'Pick a later time',
+                    validator: (value) => value.compareTo(DateTime.now()) > 0 ? null : 'Pick a later time',
                     onShowPicker: (context, currentValue) async {
                       final date = await showDatePicker(
                           context: context,
@@ -133,6 +128,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           return _buildErrorDialog(context, error.toString());
                         }
                       }
+
                     },
                   ),
                 ],
