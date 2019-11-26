@@ -19,6 +19,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String _description;
   String _payment;
   DateTime _date;
+  LocationResult _location;
   final _locationTextFieldsController = TextEditingController();
 
   @override
@@ -117,6 +118,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   print(result.formattedAddress);
                                   _locationTextFieldsController.text =
                                       result.formattedAddress;
+                                  _location = result;
+                                  
                                 }),
                             Expanded(
                               child: TextField(
@@ -163,6 +166,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             'description': _description,
                             'payment': double.parse(_payment),
                             'date': _date,
+                            'place_id': _location.placeId,
                           });
                           Navigator.of(context).pop();
                         } on Exception catch (error) {
