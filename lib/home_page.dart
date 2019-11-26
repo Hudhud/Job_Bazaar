@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:job_bazaar/auth.dart';
-import 'package:job_bazaar/screens/create_task.dart';
 import 'package:provider/provider.dart';
 import 'package:job_bazaar/tasks_page.dart';
 
@@ -55,16 +54,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CreateTaskScreen()),
-          );
-          
-        },
-        child: Icon(Icons.create),
-      ),
     );
   }
 }
