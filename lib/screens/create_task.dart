@@ -1,8 +1,10 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:place_picker/place_picker.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   CreateTaskScreen({Key key}) : super(key: key);
@@ -18,6 +20,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String _description;
   String _payment;
   DateTime _date;
+  LocationResult _location;
+  final _locationTextFieldsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +46,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Title"),
                     onSaved: (value) => _title = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Description"),
                     onSaved: (value) => _description = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                     maxLines: null,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: "Payment (DKK)"),
                     validator: (value) {
-                      if(value == null) {
+                      if (value == null) {
                         return null;
                       }
                       final n = num.tryParse(value);
-                      if(n == null) {
+                      if (n == null) {
                         return '"$value" is not a valid number';
                       }
                       return null;
@@ -70,7 +76,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     format: DateFormat("yyyy-MM-dd HH:mm"),
                     decoration: InputDecoration(labelText: "Date & Time"),
                     onSaved: (value) => _date = value,
-                    validator: (value) => value.compareTo(DateTime.now()) > 0 ? null : 'Pick a later time',
+                    validator: (value) => value.compareTo(DateTime.now()) > 0
+                        ? null
+                        : 'Pick a later time',
                     onShowPicker: (context, currentValue) async {
                       final date = await showDatePicker(
                           context: context,
@@ -88,6 +96,43 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         return currentValue;
                       }
                     },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(Icons.location_searching),
+                                onPressed: () async {
+                                  LocationResult result = await Navigator.of(
+                                          context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) => PlacePicker(
+                                              'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
+
+                                  // Handle the result in your way
+                                  print(result.formattedAddress);
+                                  _locationTextFieldsController.text =
+                                      result.formattedAddress;
+                                  _location = result;
+                                  
+                                }),
+                            Expanded(
+                              child: TextField(
+                                controller: _locationTextFieldsController,
+                                enabled: false,
+                                maxLines: null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -116,19 +161,22 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
                       if (form.validate()) {
                         try {
+                          FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
                           await Firestore.instance.collection('tasks').add({
                             'hourly': _hourly,
                             'title': _title,
                             'description': _description,
                             'payment': double.parse(_payment),
                             'date': _date,
+                            'place_id': _location.placeId,
+                            'creator': user.uid,
                           });
                           Navigator.of(context).pop();
                         } on Exception catch (error) {
                           return _buildErrorDialog(context, error.toString());
                         }
                       }
-
                     },
                   ),
                 ],
