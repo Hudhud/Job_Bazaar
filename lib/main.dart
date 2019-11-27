@@ -1,40 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:job_bazaar/auth.dart';
-import 'package:job_bazaar/login_page.dart';
-import 'package:provider/provider.dart';
 import 'home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import './tasks_page.dart';
 import 'package:flutter/cupertino.dart';
 
-void main() => runApp(
-      ChangeNotifierProvider<AuthService>(
-        child: MyApp(),
-        builder: (BuildContext context) {
-          return AuthService();
-        },
-      ),
-    );
+void main() => runApp(  MyApp() );
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return MyAppState();
+  }
+
+
+}
+
+class MyAppState extends State<MyApp> {
+
+  int _selectedPage = 0;
+  final _pageOptions = [
+    HomePage(),
+    TasksPage(),
+  Text('My profile'),
+
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Job Bazaar',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: FutureBuilder<FirebaseUser>(
-        future: Provider.of<AuthService>(context).getUser(),
-        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.error != null) {
-              print("error");
-              return Text(snapshot.error.toString());
-            }
-            return snapshot.hasData ? HomePage(snapshot.data) : LoginPage();
-          } else {
-            return LoadingCircle();
-          }
-        },
+      theme: ThemeData(
       ),
+      home: Scaffold(
+        appBar: AppBar(backgroundColor: Colors.black54,),
+        body: _pageOptions[_selectedPage],
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.black,
+          currentIndex: _selectedPage,
+          onTap: (int index){
+            setState(() {
+              _selectedPage = index;
+            });
+          },
+          selectedItemColor: Colors.orange,
+          unselectedItemColor: Colors.white,
+          selectedFontSize: 20,
+          unselectedFontSize: 12,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work,),
+              title: Text("Tasks"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.group_work, ),
+              title: Text("My Tasks"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.view_stream,),
+              title: Text("Profile"),
+              backgroundColor: (Colors.orange),
+
+
+            ),
+          ],
+        ),
+
+      ),
+
     );
   }
 }
