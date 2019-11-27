@@ -8,7 +8,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25.0),
-      child:
+      child: Text("Home Page"),
+      /*
       Scaffold(
       appBar: AppBar(
         title: Text("Home"),
@@ -41,7 +42,7 @@ class HomePage extends StatelessWidget {
         ],
       )),
     ),
-
+*/
     );
   }
 }
