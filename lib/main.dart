@@ -20,7 +20,7 @@ class MyAppState extends State<MyApp> {
   final _pageOptions = [
     HomePage(),
     TasksPage(),
-  Text('My profile'),
+  Text('My profile'),  // add the my profile class here.
 
   ];
 
@@ -28,9 +28,6 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
 
-      title: 'Job Bazaar',
-      theme: ThemeData(
-      ),
       home: Scaffold(
         appBar: AppBar(backgroundColor: Colors.black54,),
         body: _pageOptions[_selectedPage],
