@@ -29,7 +29,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
 
       home: Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black54,),
+        //appBar: AppBar(backgroundColor: Colors.black54,),
         body: _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.black,
