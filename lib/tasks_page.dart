@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_bazaar/screens/Edit_task.dart';
 import 'package:job_bazaar/task.dart';
 import 'package:job_bazaar/screens/create_task.dart';
 
@@ -43,7 +44,7 @@ class TasksPage extends StatelessWidget {
         onPressed: () {
           // Add your onPressed code here!
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CreateTaskScreen()),
+            MaterialPageRoute(builder: (context) => EditTaskScreen()),
           );
         },
         child: Icon(Icons.add),
