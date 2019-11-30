@@ -150,7 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                   if (form.validate()) {
                     try {
                       // send email
-                      await Provider.of<AuthService>(context).sendPasswordResetEmail(email: _resetPassEmail);
+                      await Provider.of<AuthService>(context)
+                          .sendPasswordResetEmail(email: _resetPassEmail);
                     } on AuthException catch (error) {
                       return _buildErrorDialog(context, error.message);
                     } on Exception catch (error) {
