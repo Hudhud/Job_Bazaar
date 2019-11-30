@@ -27,9 +27,7 @@ class MyAppState extends State<MyApp> {
         brightness: Brightness.dark,
         primaryColor: Colors.black,
         accentColor: Colors.black87,
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.orange
-        ),
+        buttonTheme: ButtonThemeData(buttonColor: Colors.orange),
       ),
       home: Scaffold(
         //appBar: AppBar(backgroundColor: Colors.black54,),
