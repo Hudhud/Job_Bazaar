@@ -106,22 +106,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            IconButton(
-                                icon: Icon(Icons.location_searching),
-                                onPressed: () async {
-                                  LocationResult result = await Navigator.of(
-                                          context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) => PlacePicker(
-                                              'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
+                            Container(
+                              color: Colors.orange,
+                              child: IconButton(
+                                  icon: Icon(Icons.location_searching),
+                                  color: Colors.white,
+                                  onPressed: () async {
+                                    LocationResult result = await Navigator.of(
+                                            context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => PlacePicker(
+                                                'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
 
-                                  // Handle the result in your way
-                                  print(result.formattedAddress);
-                                  _locationTextFieldsController.text =
-                                      result.formattedAddress;
-                                  _location = result;
-                                  
-                                }),
+                                    // Handle the result in your way
+                                    print(result.formattedAddress);
+                                    _locationTextFieldsController.text =
+                                        result.formattedAddress;
+                                    _location = result;
+                                  }),
+                            ),
                             Expanded(
                               child: TextField(
                                 controller: _locationTextFieldsController,
@@ -161,7 +164,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
                       if (form.validate()) {
                         try {
-                          FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                          FirebaseUser user =
+                              await FirebaseAuth.instance.currentUser();
 
                           await Firestore.instance.collection('tasks').add({
                             'hourly': _hourly,

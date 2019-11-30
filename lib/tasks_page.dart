@@ -47,6 +47,7 @@ class TasksPage extends StatelessWidget {
           );
         },
         child: Icon(Icons.add),
+        backgroundColor: Colors.orange,
       ),
     );
   }
