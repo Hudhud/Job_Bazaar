@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_bazaar/detail_page.dart';
+import 'package:job_bazaar/screens/Edit_task.dart';
 import 'package:job_bazaar/screens/create_task.dart';
 
 class TasksPage extends StatefulWidget {
