@@ -48,19 +48,6 @@ class HomePageState extends State<HomePage> {
               //zoominsfunction
             ],
           ),
-          // body: FutureBuilder(
-          //   future: _googleMap(context, snapshot.data.documents),
-          //   builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-          //     if (!snapshot.hasData) return new Text("her...");
-          //     return Stack(
-          //   children: <Widget>[
-          //     snapshot.data,
-          //     _tasksContainer()
-          //     //zoominsfunction
-          //   ],
-          // );
-          //   },
-          // ),
         );
       },
     );
