@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:job_bazaar/models/task.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,27 +22,34 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_left),
-          onPressed: () {},
-        ),
-        title: Text("Copenhagen"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
+    return new StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('tasks').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return new Text("Loading...");
+
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_left),
+              onPressed: () {},
+            ),
+            title: Text("Copenhagen"),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {},
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          _googleMap(context),
-          _tasksContainer()
-          //zoominsfunction
-        ],
-      ),
+          body: Stack(
+            children: <Widget>[
+              _googleMap(context, snapshot.data.documents),
+              _tasksContainer()
+              //zoominsfunction
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -101,7 +110,16 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _googleMap(BuildContext context) {
+  Widget _googleMap(
+      BuildContext context, List<DocumentSnapshot> documents) {
+    final markers = documents.map((doc) => Task.fromMap(doc.data)).map((doc) => Marker(
+          markerId: MarkerId(doc.placeId),
+          position: LatLng(doc.latitude, doc.longitude),
+          infoWindow: InfoWindow(title: doc.title),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+        )).toSet();
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -112,10 +130,7 @@ class HomePageState extends State<HomePage> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
-        markers: {
-          tasksLocationMarker,
-          tasksLocationMarker2,
-        },
+        markers: markers,
       ),
     );
   }
@@ -126,16 +141,3 @@ class HomePageState extends State<HomePage> {
         target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
   }
 }
-
-Marker tasksLocationMarker = Marker(
-  markerId: MarkerId('KU'),
-  position: LatLng(55.6802303, 12.5702209),
-  infoWindow: InfoWindow(title: "Københaven Universitet"),
-  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-);
-Marker tasksLocationMarker2 = Marker(
-  markerId: MarkerId('dtu'),
-  position: LatLng(55.7855012, 12.5143188),
-  infoWindow: InfoWindow(title: "DTU Lyngby"),
-  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-);
