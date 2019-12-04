@@ -110,15 +110,17 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _googleMap(
-      BuildContext context, List<DocumentSnapshot> documents) {
-    final markers = documents.map((doc) => Task.fromMap(doc.data)).map((doc) => Marker(
-          markerId: MarkerId(doc.placeId),
-          position: LatLng(doc.latitude, doc.longitude),
-          infoWindow: InfoWindow(title: doc.title),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-        )).toSet();
+  Widget _googleMap(BuildContext context, List<DocumentSnapshot> documents) {
+    final markers = documents
+        .map((doc) => Task.fromMap(doc.data))
+        .map((doc) => Marker(
+              markerId: MarkerId(doc.placeId),
+              position: LatLng(doc.latitude, doc.longitude),
+              infoWindow: InfoWindow(title: doc.title),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueOrange),
+            ))
+        .toSet();
 
     return Container(
       height: MediaQuery.of(context).size.height,
