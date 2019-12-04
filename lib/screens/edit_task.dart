@@ -77,7 +77,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   ),
                   SizedBox(height: 20.0),
                   TextFormField(
-                    keyboardType: null,
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Title"),
                     controller: _titleController,
                     inputFormatters: [
