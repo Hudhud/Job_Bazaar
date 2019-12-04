@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_bazaar/detail_page.dart';
-import 'package:job_bazaar/screens/Edit_task.dart';
 import 'package:job_bazaar/screens/create_task.dart';
 
 class TasksPage extends StatefulWidget {
@@ -10,8 +9,6 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  Future _data;
-
   Future getTasks() async {
     var fireStore = Firestore.instance;
     QuerySnapshot qn = await fireStore.collection('tasks').getDocuments();
@@ -28,20 +25,13 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _data = getTasks();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("My Tasks"),
       ),
       body: FutureBuilder(
-        future: _data,
+        future: getTasks(),
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

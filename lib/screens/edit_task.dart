@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:job_bazaar/screens/create_task.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-//import 'package:job_bazaar/screens/create_task.dart';
-
-
 
 class EditTaskScreen extends StatefulWidget {
-  EditTaskScreen({Key key}) : super(key: key);
+  final DocumentSnapshot task;
+
+  EditTaskScreen({Key key, this.task}) : super(key: key);
 
   @override
   _EditTaskScreenState createState() => _EditTaskScreenState();
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-
   final _formKey = GlobalKey<FormState>();
   bool _hourly = false;
   String _title;
@@ -29,51 +25,40 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   LocationResult _location;
   final _locationTextFieldsController = TextEditingController();
 
-
-  final _titleController =  new TextEditingController();
-//  String fle = CreateTaskScreen.instance.title;
-  final _descriptionController = TextEditingController();
-  final _paymentController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _locationController = TextEditingController();
-
-  var _listener;
-  var _transactionListener;
-
-  @override void dispose() {
-    // TODO: implement dispose
+  @override
+  void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     _paymentController.dispose();
     _dateController.dispose();
-    _locationController.dispose();
-
-    _transactionListener.cancel();
-
-
-
     super.dispose();
   }
 
-
-//  TextEditingController _titleController;
-//  TextEditingController _descriptionController;
-//  TextEditingController _paymentController;
-//  TextEditingController _dateController;
-//  TextEditingController _locationController;
+  TextEditingController _titleController;
+  TextEditingController _descriptionController;
+  TextEditingController _paymentController;
+  TextEditingController _dateController;
 
   @override
   void initState() {
-//    _titleController = TextEditingController(text: "Title");
-//    _descriptionController = TextEditingController(text: "Description");
-//    _paymentController = TextEditingController(text: "Payment (DKK)");
-//    _dateController = TextEditingController(text: "Date & Time");
-////    _locationController = TextEditingController(text: "Location");
+    _titleController = TextEditingController(text: (widget.task['title']));
+    _descriptionController =
+        TextEditingController(text: (widget.task['description']));
+    _paymentController =
+        TextEditingController(text: (widget.task['payment'].toString()));
+    Timestamp date = widget.task['date'];
+    _dateController = TextEditingController(
+        text: DateFormat('yyyy-MM-dd - kk:mm').format(
+            DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch)));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Timestamp dateTimeStamp = widget.task['date'];
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(
+        dateTimeStamp.millisecondsSinceEpoch);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Task"),
@@ -92,50 +77,47 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   ),
                   SizedBox(height: 20.0),
                   TextFormField(
-                    keyboardType: TextInputType.text,
+                    keyboardType: null,
                     decoration: InputDecoration(labelText: "Title"),
-                    //code ma
                     controller: _titleController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(45),
                     ],
-
                     onSaved: (value) => _title = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Description"),
-                    //code ma
                     controller: _descriptionController,
-//                    onSaved: (value) => _description = value,
-                    validator: (value) => value != ""? null : "All fields are required",
+                    onSaved: (value) => _description = value,
+                    validator: (value) =>
+                        value != "" ? null : "All fields are required",
                     maxLines: null,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: "Payment (DKK)"),
                     validator: (value) {
-                      if(value == null) {
+                      if (value == null) {
                         return null;
                       }
                       final n = num.tryParse(value);
-                      if(n == null) {
+                      if (n == null) {
                         return '"$value" is not a valid number';
                       }
                       return null;
                     },
-                    //code ma
                     controller: _paymentController,
-                    onSaved: (value) => _payment = value,
+                    onSaved: (value) => _payment = value.toString(),
                   ),
                   DateTimeField(
                     format: DateFormat("yyyy-MM-dd HH:mm"),
                     decoration: InputDecoration(labelText: "Date & Time"),
-                    //code ma
+                    initialValue: date,
                     controller: _dateController,
-//                    onSaved: (value) => _date = value,
-                    validator: (value) => value.compareTo(DateTime.now()) > 0 ? null : 'Pick a later time',
+                    onSaved: (value) => _date = value,
                     onShowPicker: (context, currentValue) async {
                       final date = await showDatePicker(
                           context: context,
@@ -166,21 +148,20 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             Container(
                               color: Colors.orange,
                               child: IconButton(
-                                icon: Icon(Icons.location_searching),
-                                onPressed: () async {
-                                  LocationResult result = await Navigator.of(
-                                      context)
-                                      .push(MaterialPageRoute(
-                                      builder: (context) => PlacePicker(
-                                          'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
+                                  icon: Icon(Icons.location_searching),
+                                  onPressed: () async {
+                                    LocationResult result = await Navigator.of(
+                                            context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => PlacePicker(
+                                                'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
 
-                                  // Handle the result in your way
-                                  print(result.formattedAddress);
-                                  _locationTextFieldsController.text =
-                                      result.formattedAddress;
-                                  _location = result;
-
-                                }),
+                                    // Handle the result in your way
+                                    print(result.formattedAddress);
+                                    _locationTextFieldsController.text =
+                                        result.formattedAddress;
+                                    _location = result;
+                                  }),
                             ),
                             Expanded(
                               child: TextField(
@@ -217,33 +198,27 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   RaisedButton(
                     child: Text("Save Task!"),
                     onPressed: () async {
-
-                      // code ma
-//                      if (_formKey.currentState.validate()){
-//                        CreateTaskScreen.update()
-//                      }
-//                      final form = _formKey.currentState;
-//                      form.save();
-
-//                      if (form.validate()) {
                       if (_formKey.currentState.validate()) {
                         try {
-                          FirebaseUser user = await FirebaseAuth.instance.currentUser();
-                          await Firestore.instance.collection('tasks').add({
+                          _formKey.currentState.save();
+                          Firestore.instance
+                              .collection('tasks')
+                              .document(widget.task.documentID)
+                              .updateData({
                             'hourly': _hourly,
                             'title': _title,
                             'description': _description,
                             'payment': double.parse(_payment),
                             'date': _date,
-                            'place_id': _location.placeId,
-                            'creator': user.uid,
+                            'formattedAddress': _location.formattedAddress,
+                            'latitude': _location.latLng.latitude,
+                            'longitude': _location.latLng.longitude,
                           });
                           Navigator.of(context).pop();
                         } on Exception catch (error) {
                           return _buildErrorDialog(context, error.toString());
                         }
                       }
-
                     },
                   ),
                 ],
