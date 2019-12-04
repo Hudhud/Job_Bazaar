@@ -26,20 +26,6 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
-  /**
-   * return Scaffold(
-   *  appBar: DetailPageAppBar(widget.task)
-   *  body: Column(
-   *    mainAxisAlignment: MainAxisAlignment.start,
-   *    children: <Widget>[
-   *      TaskIcon(widget.task),
-   *      SearchAssignSelect(widget.task),
-   *      TaskDetail(widget.task),
-   *    ]
-   *  )
-   * );
-   */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
