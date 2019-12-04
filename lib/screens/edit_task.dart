@@ -8,7 +8,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final DocumentSnapshot task;
-
   EditTaskScreen({Key key, this.task}) : super(key: key);
 
   @override
@@ -17,13 +16,13 @@ class EditTaskScreen extends StatefulWidget {
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _hourly = false;
+  bool _hourly = true;
   String _title;
   String _description;
   String _payment;
   DateTime _date;
   LocationResult _location;
-  final _locationTextFieldsController = TextEditingController();
+  var _locationTextFieldsController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,6 +30,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     _descriptionController.dispose();
     _paymentController.dispose();
     _dateController.dispose();
+    _locationTextFieldsController.dispose();
     super.dispose();
   }
 
@@ -42,23 +42,20 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   @override
   void initState() {
     _titleController = TextEditingController(text: (widget.task['title']));
-    _descriptionController =
-        TextEditingController(text: (widget.task['description']));
-    _paymentController =
-        TextEditingController(text: (widget.task['payment'].toString()));
+    _descriptionController = TextEditingController(text: (widget.task['description']));
+    _paymentController = TextEditingController(text: (widget.task['payment'].toString()));
     Timestamp date = widget.task['date'];
-    _dateController = TextEditingController(
-        text: DateFormat('yyyy-MM-dd - kk:mm').format(
-            DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch)));
+    _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd - kk:mm')
+        .format(DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch)));
+    _locationTextFieldsController = TextEditingController(text: widget.task['formattedAddress']);
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     Timestamp dateTimeStamp = widget.task['date'];
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(
-        dateTimeStamp.millisecondsSinceEpoch);
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(dateTimeStamp.millisecondsSinceEpoch);
 
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Task"),
@@ -85,7 +82,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     ],
                     onSaved: (value) => _title = value,
                     validator: (value) =>
-                        value != "" ? null : "All fields are required",
+                    value != "" ? null : "All fields are required",
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
@@ -93,7 +90,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     controller: _descriptionController,
                     onSaved: (value) => _description = value,
                     validator: (value) =>
-                        value != "" ? null : "All fields are required",
+                    value != "" ? null : "All fields are required",
                     maxLines: null,
                   ),
                   TextFormField(
@@ -151,11 +148,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                   icon: Icon(Icons.location_searching),
                                   onPressed: () async {
                                     LocationResult result = await Navigator.of(
-                                            context)
+                                        context)
                                         .push(MaterialPageRoute(
-                                            builder: (context) => PlacePicker(
-                                                'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
-
+                                        builder: (context) => PlacePicker(
+                                            'AIzaSyDhmH5I47gLmVD_BtVVWSa9BQC7ogNjiVw')));
                                     // Handle the result in your way
                                     print(result.formattedAddress);
                                     _locationTextFieldsController.text =
@@ -201,10 +197,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       if (_formKey.currentState.validate()) {
                         try {
                           _formKey.currentState.save();
-                          Firestore.instance
-                              .collection('tasks')
-                              .document(widget.task.documentID)
-                              .updateData({
+                          Firestore.instance.collection('tasks').document(widget.task.documentID).updateData
+                            ({
                             'hourly': _hourly,
                             'title': _title,
                             'description': _description,
