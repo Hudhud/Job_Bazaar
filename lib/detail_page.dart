@@ -111,6 +111,54 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                           ])),
                   SizedBox(height: 30),
+
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: 1.5,
+                        color: Colors.white,
+                        padding: EdgeInsets.all(40),
+                        margin: EdgeInsets.only(left: 50, right: 8),
+                      ),
+                      Text('Helpers Hired'),
+                      Container(
+                        height: 1.5,
+                        color: Colors.white,
+                        padding: EdgeInsets.all(40),
+                        margin: EdgeInsets.only(
+                          left: 8,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Column(
+                    children: !snapshot.hasData? <Widget>[Text('Loading...')] :
+                    snapshot.data.documents
+                        .where((application) => application.data['status'] == 'hired')
+                        .map((application) => InkWell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(
+                                    left: 20, right: 20, top: 5),
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: new BorderRadius.all(
+                                      const Radius.circular(20.0)),
+                                ),
+                                child: Text(application.documentID),
+                              ),
+                              onTap: () =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ApplicantScreen(
+                                    uid: application.documentID,
+                                    taskId: widget.task.documentID),
+                              )),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(height: 20),
                   Row(
                     children: <Widget>[
                       Container(
@@ -136,6 +184,7 @@ class _DetailPageState extends State<DetailPage> {
                   Column(
                     children: !snapshot.hasData? <Widget>[Text('Loading...')] :
                     snapshot.data.documents
+                        .where((application) => application.data['status'] == 'interested')
                         .map((application) => InkWell(
                               child: Container(
                                 alignment: Alignment.center,
@@ -158,25 +207,6 @@ class _DetailPageState extends State<DetailPage> {
                             ))
                         .toList(),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Column(
-                    children: snapshot.data.documents
-                        .map((application) => Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.all(10),
-                              margin:
-                                  EdgeInsets.only(left: 20, right: 20, top: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.black45,
-                                borderRadius: new BorderRadius.all(
-                                    const Radius.circular(20.0)),
-                              ),
-                              child: Text(application.documentID),
-                            ))
-                        .toList(),
-                  )
                 ],
               ),
             ));

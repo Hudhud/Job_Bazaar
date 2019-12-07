@@ -166,7 +166,7 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                         await Firestore.instance
                             .collection('tasks/${_task.id}/applicants')
                             .document(user.uid)
-                            .setData({'status': 'interrested'});
+                            .setData({'status': 'interested', 'mail': user.email});
                       } on Exception catch (error) {
                         print(error); //error message here
                       }
