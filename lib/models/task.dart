@@ -16,6 +16,7 @@ class Task {
     this.formattedAddress,
     this.latitude,
     this.longitude,
+    this.hired,
   });
 
   String id;
@@ -29,6 +30,7 @@ class Task {
   String formattedAddress;
   double latitude;
   double longitude;
+  String hired;
 
   Task copyWith({
     bool hourly,
@@ -42,6 +44,7 @@ class Task {
     double latitude,
     double longitude,
     String id,
+    String hired,
   }) {
     return Task(
       hourly: hourly ?? this.hourly,
@@ -55,6 +58,7 @@ class Task {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       id: id ?? this.id,
+      hired: hired ?? this.hired,
     );
   }
 
@@ -71,6 +75,7 @@ class Task {
       'latitude': latitude,
       'longitude': longitude,
       'id': id,
+      'hired': hired,
     };
   }
 
@@ -90,7 +95,8 @@ class Task {
       formattedAddress: map['formattedAddress'],
       latitude: map['latitude'],
       longitude: map['longitude'],
-      id: map['id']
+      id: map['id'],
+      hired: map['hired'],
     );
   }
 
@@ -118,7 +124,8 @@ class Task {
       o.creator == creator &&
       o.formattedAddress == formattedAddress &&
       o.latitude == latitude &&
-      o.longitude == longitude;
+      o.longitude == longitude &&
+      o.hired == hired;
   }
 
   @override
@@ -133,6 +140,7 @@ class Task {
       creator.hashCode ^
       formattedAddress.hashCode ^
       latitude.hashCode ^
-      longitude.hashCode;
+      longitude.hashCode ^
+      hired.hashCode;
   }
 }
