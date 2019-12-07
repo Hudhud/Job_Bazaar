@@ -153,7 +153,8 @@ class _DetailPageState extends State<DetailPage> {
                               onTap: () =>
                                   Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ApplicantScreen(
-                                    uid: application.documentID),
+                                    uid: application.documentID,
+                                    taskId: widget.task.documentID),
                               )),
                             ))
                         .toList(),
