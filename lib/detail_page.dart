@@ -34,8 +34,6 @@ class _DetailPageState extends State<DetailPage> {
           .collection('tasks/${widget.task.documentID}/applicants')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
-          return new Text("Loading..."); // Improve error handling...
         return Scaffold(
             appBar: AppBar(
               title: Text(widget.task.data['title']),
@@ -136,7 +134,8 @@ class _DetailPageState extends State<DetailPage> {
                     height: 5,
                   ),
                   Column(
-                    children: snapshot.data.documents
+                    children: !snapshot.hasData? <Widget>[Text('Loading...')] :
+                    snapshot.data.documents
                         .map((application) => InkWell(
                               child: Container(
                                 alignment: Alignment.center,
