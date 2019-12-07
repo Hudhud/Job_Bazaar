@@ -5,6 +5,10 @@ import 'package:job_bazaar/auth.dart';
 import 'package:job_bazaar/signup_page.dart';
 import 'package:provider/provider.dart';
 
+// SingleChildScrollView(
+//         child: ,
+//       ),
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -24,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text("Login"),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
           padding: EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
@@ -106,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           )),
+      ),
     );
   }
 

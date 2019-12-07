@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_bazaar/login_page.dart';
 import 'home_page.dart';
 import './tasks_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +18,7 @@ class MyAppState extends State<MyApp> {
   final _pageOptions = [
     HomePage(),
     TasksPage(),
-    Text('My profile'), // add the my profile class here.
+    LoginPage(), // add the my profile class here.
   ];
 
   @override
