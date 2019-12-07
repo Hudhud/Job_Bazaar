@@ -113,7 +113,10 @@ class HomePageState extends State<HomePage> {
 
   Widget _googleMap(BuildContext context, List<DocumentSnapshot> documents) {
     final markers = documents
-        .map((doc) => Task.fromMap(doc.data))
+        .map((doc) {
+          doc.data['id'] = doc.documentID;
+          return Task.fromMap(doc.data);
+        })
         .map((task) => Marker(
               markerId: MarkerId(task.placeId),
               position: LatLng(task.latitude, task.longitude),

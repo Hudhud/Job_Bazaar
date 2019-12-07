@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_bazaar/models/task.dart';
@@ -98,7 +100,21 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(18.0),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+                        print(_task.toString());
+                        
+                        await Firestore.instance.collection('tasks/${_task.id}/applicants').document(user.uid).setData({'status': 'interrested'});
+
+                        // _task.
+
+                        // await Firestore.instance.collection('tasks')
+                      } on Exception catch (error) {
+                        print(error); //error message here
+                      }
+                    },
                   ),
                 ],
               ),
