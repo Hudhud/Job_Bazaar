@@ -25,14 +25,45 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
         title: Text(_task.title),
       ),
       body: SingleChildScrollView(
+//        child: Column(
+//          children: <Widget>[
+//            Container(
+//              width: 150.0,
+//              height: 150.0,
+//              decoration: BoxDecoration(
+//                color: Colors.orange,
+//                image: DecorationImage(
+//                  image: NetworkImage(""),
+//                  fit: BoxFit.cover
+//                ),
+//                borderRadius: BorderRadius.all(Radius.circular(75.0)),
+//              ),
+//            )
+//          ],
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Center(
               child: Container(
+            margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+              width: 120.0,
+              height: 120.0,
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                image: DecorationImage(
+                    image: NetworkImage("https://img.icons8.com/ios-filled/50/000000/user-male-circle.png"),
+                    fit: BoxFit.cover
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(75.0)),
+              ),
+            ),
+            ),
+            Center(
+              child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
-                  margin: const EdgeInsets.only(left: 140, right: 140, top: 20),
+                  margin: const EdgeInsets.only(left: 140, right: 140, top: 10),
                   decoration: BoxDecoration(
                     color: Colors.orange,
                     borderRadius:
@@ -100,7 +131,27 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(18.0),
                     ),
+
                     onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Show Interest"),
+                            content: Text("Show that you are interested in helping with the task"
+                                "the task provider will be notified and can choose to accept you help."
+                                "You will reviece a notification in the task provider has accepted your help."),
+                            actions: [
+                              FlatButton(
+                                onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("close"),
+                              )
+                            ],
+                          );
+                        }
+                      );
                       try {
                         FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
@@ -125,3 +176,31 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
     );
   }
 }
+
+//class CustomDilog (BuildContext,Context) {
+//  return showDialog(
+//
+//  )
+//
+//}
+//
+//
+//Future _buildErrorDialog(BuildContext context, _message) {
+//  return showDialog(
+//    builder: (context) {
+//      return AlertDialog(
+//        title: Text('Error Message'),
+//        content: Text(_message),
+//        actions: <Widget>[
+//          FlatButton(
+//              child: Text('Cancel'),
+//              onPressed: () {
+//                Navigator.of(context).pop();
+//              })
+//        ],
+//      );
+//    },
+//    context: context,
+//  );
+//}
+//}
