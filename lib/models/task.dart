@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Task {
-  Task({
+
+    Task({
+    this.id,
     this.hourly,
     this.title,
     this.description,
@@ -16,6 +18,7 @@ class Task {
     this.longitude,
   });
 
+  String id;
   bool hourly;
   String title;
   String description;
@@ -38,6 +41,7 @@ class Task {
     String formattedAddress,
     double latitude,
     double longitude,
+    String id,
   }) {
     return Task(
       hourly: hourly ?? this.hourly,
@@ -50,6 +54,7 @@ class Task {
       formattedAddress: formattedAddress ?? this.formattedAddress,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      id: id ?? this.id,
     );
   }
 
@@ -65,6 +70,7 @@ class Task {
       'formattedAddress': formattedAddress,
       'latitude': latitude,
       'longitude': longitude,
+      'id': id,
     };
   }
 
@@ -84,6 +90,7 @@ class Task {
       formattedAddress: map['formattedAddress'],
       latitude: map['latitude'],
       longitude: map['longitude'],
+      id: map['id']
     );
   }
 
@@ -93,7 +100,7 @@ class Task {
 
   @override
   String toString() {
-    return 'Task hourly: $hourly, title: $title, description: $description, payment: $payment, date: $date, placeId: $placeId, creator: $creator, formattedAddress: $formattedAddress, latitude: $latitude, longitude: $longitude';
+    return 'Task id: $id, hourly: $hourly, title: $title, description: $description, payment: $payment, date: $date, placeId: $placeId, creator: $creator, formattedAddress: $formattedAddress, latitude: $latitude, longitude: $longitude';
   }
 
   @override
@@ -101,29 +108,31 @@ class Task {
     if (identical(this, o)) return true;
 
     return o is Task &&
-        o.hourly == hourly &&
-        o.title == title &&
-        o.description == description &&
-        o.payment == payment &&
-        o.date == date &&
-        o.placeId == placeId &&
-        o.creator == creator &&
-        o.formattedAddress == formattedAddress &&
-        o.latitude == latitude &&
-        o.longitude == longitude;
+      o.id == id &&
+      o.hourly == hourly &&
+      o.title == title &&
+      o.description == description &&
+      o.payment == payment &&
+      o.date == date &&
+      o.placeId == placeId &&
+      o.creator == creator &&
+      o.formattedAddress == formattedAddress &&
+      o.latitude == latitude &&
+      o.longitude == longitude;
   }
 
   @override
   int get hashCode {
-    return hourly.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        payment.hashCode ^
-        date.hashCode ^
-        placeId.hashCode ^
-        creator.hashCode ^
-        formattedAddress.hashCode ^
-        latitude.hashCode ^
-        longitude.hashCode;
+    return id.hashCode ^ 
+      hourly.hashCode ^
+      title.hashCode ^
+      description.hashCode ^
+      payment.hashCode ^
+      date.hashCode ^
+      placeId.hashCode ^
+      creator.hashCode ^
+      formattedAddress.hashCode ^
+      latitude.hashCode ^
+      longitude.hashCode;
   }
 }

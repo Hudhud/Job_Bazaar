@@ -1,14 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  ///
-  /// return the Future with firebase user object FirebaseUser if one exists
-  ///
   Future<FirebaseUser> getUser() {
     return _auth.currentUser();
   }
@@ -19,12 +15,6 @@ class AuthService with ChangeNotifier {
     notifyListeners();
     return result;
   }
-
-  ///
-  /// wrapping the firebase call to signInWithEmailAndPassword
-  /// `email` String
-  /// `password` String
-  ///
   Future<FirebaseUser> loginUser({String email, String password}) async {
     try {
       var result = await FirebaseAuth.instance
@@ -35,12 +25,6 @@ class AuthService with ChangeNotifier {
       throw new AuthException(e.code, e.message);
     }
   }
-
-  ///
-  /// wrapping the firebase call to createUserWithEmailAndPassword
-  /// `email` String
-  /// `password` String
-  ///
   Future<FirebaseUser> signUpUser({String email, String password}) async {
     try {
       var result = await FirebaseAuth.instance
@@ -51,12 +35,6 @@ class AuthService with ChangeNotifier {
       throw new AuthException(e.code, e.message);
     }
   }
-
-  ///
-  /// wrapping the firebase call to sendPasswordResetEmail
-  /// `email` String
-  /// `password` String
-  ///
   Future<void> sendPasswordResetEmail({String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);

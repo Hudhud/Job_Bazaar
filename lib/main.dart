@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:job_bazaar/auth.dart';
+import 'package:job_bazaar/login_page.dart';
+import 'package:provider/provider.dart';
 import 'home_page.dart';
 import './tasks_page.dart';
 import 'package:flutter/cupertino.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ChangeNotifierProvider<AuthService>(
+  child: MyApp(),
+  builder: (BuildContext context) {
+    return AuthService();
+  },
+));
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,7 +25,7 @@ class MyAppState extends State<MyApp> {
   final _pageOptions = [
     HomePage(),
     TasksPage(),
-    Text('My profile'), // add the my profile class here.
+    LoginPage(), // add the my profile class here.
   ];
 
   @override

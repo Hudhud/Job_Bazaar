@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:job_bazaar/models/task.dart';
+import 'package:job_bazaar/screens/apply_task.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -112,11 +113,25 @@ class HomePageState extends State<HomePage> {
 
   Widget _googleMap(BuildContext context, List<DocumentSnapshot> documents) {
     final markers = documents
-        .map((doc) => Task.fromMap(doc.data))
-        .map((doc) => Marker(
-              markerId: MarkerId(doc.placeId),
-              position: LatLng(doc.latitude, doc.longitude),
-              infoWindow: InfoWindow(title: doc.title),
+        .map((doc) {
+          doc.data['id'] = doc.documentID;
+          return Task.fromMap(doc.data);
+        })
+        .map((task) => Marker(
+              markerId: MarkerId(task.placeId),
+              position: LatLng(task.latitude, task.longitude),
+              infoWindow: InfoWindow(
+                title: task.title,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ApplyTaskScreen(
+                              task: task,
+                            )),
+                  );
+                },
+              ),
               icon: BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange),
             ))
