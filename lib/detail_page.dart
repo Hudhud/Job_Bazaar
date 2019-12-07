@@ -33,6 +33,8 @@ class _DetailPageState extends State<DetailPage> {
           .collection('tasks/${widget.task.documentID}/applicants')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData)
+          return new Text("Loading..."); // Improve error handling...
         return Scaffold(
           appBar: AppBar(
             title: Text(widget.task.data['title']),
@@ -105,7 +107,7 @@ class _DetailPageState extends State<DetailPage> {
                                   .toString(),
                         ),
                       ])),
-                      SizedBox(height: 30),
+              SizedBox(height: 30),
               Row(
                 children: <Widget>[
                   Container(
@@ -114,7 +116,6 @@ class _DetailPageState extends State<DetailPage> {
                     padding: EdgeInsets.all(40),
                     margin: EdgeInsets.only(left: 35, right: 8),
                   ),
-                  
                   Text('Helpers interrested'),
                   Container(
                     height: 1.5,
@@ -134,7 +135,7 @@ class _DetailPageState extends State<DetailPage> {
                     .map((application) => Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.all(20),
+                          margin: EdgeInsets.only(left: 20, right: 20, top: 5),
                           decoration: BoxDecoration(
                             color: Colors.black45,
                             borderRadius: new BorderRadius.all(
