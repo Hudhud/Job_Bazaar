@@ -11,8 +11,8 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> {
   Future getTasks() async {
     var fireStore = Firestore.instance;
-    QuerySnapshot qn = await fireStore.collection('tasks').getDocuments();
-    return qn.documents;
+    QuerySnapshot qs = await fireStore.collection('tasks').getDocuments();
+    return qs.documents;
   }
 
   navigateToDetail(DocumentSnapshot task) {
@@ -41,20 +41,27 @@ class _TasksPageState extends State<TasksPage> {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (_, index) {
-                  return ListTile(
-                      onTap: () => navigateToDetail(snapshot.data[index]),
-                      subtitle: Container(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          children: <Widget>[
-                            Text(snapshot.data[index].data['title']),
-                            Text("Kr. " +
-                                snapshot.data[index].data['payment']
-                                    .toString()),
-                            Text(snapshot.data[index].data['description']),
-                          ],
-                        ),
-                      ));
+                  return Container(
+                      child: ListTile(
+                          onTap: () => navigateToDetail(snapshot.data[index]),
+                          subtitle: Container(
+                            height: 75.0,
+                            width: 75.0,
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(7.0))),
+                            child: Column(
+                              children: <Widget>[
+                                Text(snapshot.data[index].data['title']),
+                                Text("Kr. " +
+                                    snapshot.data[index].data['payment']
+                                        .toString()),
+                                Text(snapshot.data[index].data['description']),
+                              ],
+                            ),
+                          )));
                 });
           }
         },
@@ -65,7 +72,7 @@ class _TasksPageState extends State<TasksPage> {
             MaterialPageRoute(builder: (context) => CreateTaskScreen()),
           );
         },
-        child: Icon(Icons.create),
+        child: Icon(Icons.add),
         backgroundColor: Colors.orange,
       ),
     );
