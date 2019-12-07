@@ -28,25 +28,29 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.task.data['title']),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                setState(() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditTaskScreen(task: widget.task),
-                  ));
-                });
-              },
-            )
-          ],
-        ),
-        body: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
+    return new StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('tasks/${widget.task.documentID}/applicants')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(widget.task.data['title']),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditTaskScreen(task: widget.task),
+                    ));
+                  });
+                },
+              )
+            ],
+          ),
+          body: SingleChildScrollView(
+              child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text("Kr. " + widget.task.data['payment'].toString() + " Hour"),
@@ -82,26 +86,68 @@ class _DetailPageState extends State<DetailPage> {
                       color: Colors.black54,
                       borderRadius: BorderRadius.all(Radius.circular(7.0))),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Desciption", style: TextStyle(color: Colors.amber)),
-                      Text(
-                        "\n" + widget.task.data['description'],
-                      ),
-                      Text("\nLocation", style: TextStyle(color: Colors.amber)),
-                      Text("\n" + widget.task.data['formattedAddress']),
-                      Text("\nDate & time",
-                          style: TextStyle(color: Colors.amber)),
-                      Text(
-                        "\n" +
-                            DateTime.fromMicrosecondsSinceEpoch(widget
-                                    .task.data['date'].microsecondsSinceEpoch)
-                                .toString(),
-                      )
-                    ],
-                  )),
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Desciption",
+                            style: TextStyle(color: Colors.amber)),
+                        Text(
+                          "\n" + widget.task.data['description'],
+                        ),
+                        Text("\nLocation",
+                            style: TextStyle(color: Colors.amber)),
+                        Text("\n" + widget.task.data['formattedAddress']),
+                        Text("\nDate & time",
+                            style: TextStyle(color: Colors.amber)),
+                        Text(
+                          "\n" +
+                              DateTime.fromMicrosecondsSinceEpoch(widget
+                                      .task.data['date'].microsecondsSinceEpoch)
+                                  .toString(),
+                        ),
+                      ])),
+                      SizedBox(height: 30),
+              Row(
+                children: <Widget>[
+                  Container(
+                    height: 1.5,
+                    color: Colors.white,
+                    padding: EdgeInsets.all(40),
+                    margin: EdgeInsets.only(left: 35, right: 8),
+                  ),
+                  
+                  Text('Helpers interrested'),
+                  Container(
+                    height: 1.5,
+                    color: Colors.white,
+                    padding: EdgeInsets.all(40),
+                    margin: EdgeInsets.only(
+                      left: 8,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Column(
+                children: snapshot.data.documents
+                    .map((application) => Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.black45,
+                            borderRadius: new BorderRadius.all(
+                                const Radius.circular(20.0)),
+                          ),
+                          child: Text(application.documentID),
+                        ))
+                    .toList(),
+              )
             ],
-          ),
-        ));
+          )),
+        );
+      },
+    );
   }
 }
