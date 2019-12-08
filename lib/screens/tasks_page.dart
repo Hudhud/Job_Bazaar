@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:job_bazaar/detail_page.dart';
+import 'package:job_bazaar/screens/detail_page.dart';
 import 'package:job_bazaar/screens/create_task.dart';
 
 class TasksPage extends StatefulWidget {
@@ -45,8 +45,8 @@ class _TasksPageState extends State<TasksPage> {
                       child: ListTile(
                           onTap: () => navigateToDetail(snapshot.data[index]),
                           subtitle: Container(
-                            height: 75.0,
-                            width: 75.0,
+                            height: 100.0,
+                            width: 100.0,
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 color: Colors.black54,
@@ -58,6 +58,9 @@ class _TasksPageState extends State<TasksPage> {
                                 Text("Kr. " +
                                     snapshot.data[index].data['payment']
                                         .toString()),
+                                Text(snapshot.data[index].data['hourly'] == true
+                                    ? "per hour"
+                                    : "one time"),
                                 Text(snapshot.data[index].data['description']),
                               ],
                             ),

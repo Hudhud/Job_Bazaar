@@ -3,15 +3,15 @@ import 'package:job_bazaar/auth.dart';
 import 'package:job_bazaar/login_page.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
-import './tasks_page.dart';
+import 'screens/tasks_page.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() => runApp(ChangeNotifierProvider<AuthService>(
-  child: MyApp(),
-  builder: (BuildContext context) {
-    return AuthService();
-  },
-));
+      child: MyApp(),
+      builder: (BuildContext context) {
+        return AuthService();
+      },
+    ));
 
 class MyApp extends StatefulWidget {
   @override
