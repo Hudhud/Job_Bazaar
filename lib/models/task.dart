@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Task {
 
     Task({
+    this.id,
     this.hourly,
     this.title,
     this.description,
@@ -15,8 +16,10 @@ class Task {
     this.formattedAddress,
     this.latitude,
     this.longitude,
+    this.hired,
   });
 
+  String id;
   bool hourly;
   String title;
   String description;
@@ -27,7 +30,7 @@ class Task {
   String formattedAddress;
   double latitude;
   double longitude;
-
+  String hired;
 
   Task copyWith({
     bool hourly,
@@ -40,6 +43,8 @@ class Task {
     String formattedAddress,
     double latitude,
     double longitude,
+    String id,
+    String hired,
   }) {
     return Task(
       hourly: hourly ?? this.hourly,
@@ -52,6 +57,8 @@ class Task {
       formattedAddress: formattedAddress ?? this.formattedAddress,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      id: id ?? this.id,
+      hired: hired ?? this.hired,
     );
   }
 
@@ -67,23 +74,29 @@ class Task {
       'formattedAddress': formattedAddress,
       'latitude': latitude,
       'longitude': longitude,
+      'id': id,
+      'hired': hired,
     };
   }
 
   static Task fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
-  
+
     return Task(
       hourly: map['hourly'],
       title: map['title'],
       description: map['description'],
       payment: map['payment'],
-      date: DateTime.fromMicrosecondsSinceEpoch(map['date'].microsecondsSinceEpoch),// new DateTime.fromMillisecondsSinceEpoch( * 1000),
+      date: DateTime.fromMicrosecondsSinceEpoch(
+          map['date'].microsecondsSinceEpoch),
+      // new DateTime.fromMillisecondsSinceEpoch( * 1000),
       placeId: map['place_id'],
       creator: map['creator'],
       formattedAddress: map['formattedAddress'],
       latitude: map['latitude'],
       longitude: map['longitude'],
+      id: map['id'],
+      hired: map['hired'],
     );
   }
 
@@ -93,14 +106,15 @@ class Task {
 
   @override
   String toString() {
-    return 'Task hourly: $hourly, title: $title, description: $description, payment: $payment, date: $date, placeId: $placeId, creator: $creator, formattedAddress: $formattedAddress, latitude: $latitude, longitude: $longitude';
+    return 'Task id: $id, hourly: $hourly, title: $title, description: $description, payment: $payment, date: $date, placeId: $placeId, creator: $creator, formattedAddress: $formattedAddress, latitude: $latitude, longitude: $longitude';
   }
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
-  
+
     return o is Task &&
+      o.id == id &&
       o.hourly == hourly &&
       o.title == title &&
       o.description == description &&
@@ -110,12 +124,14 @@ class Task {
       o.creator == creator &&
       o.formattedAddress == formattedAddress &&
       o.latitude == latitude &&
-      o.longitude == longitude;
+      o.longitude == longitude &&
+      o.hired == hired;
   }
 
   @override
   int get hashCode {
-    return hourly.hashCode ^
+    return id.hashCode ^ 
+      hourly.hashCode ^
       title.hashCode ^
       description.hashCode ^
       payment.hashCode ^
@@ -124,6 +140,7 @@ class Task {
       creator.hashCode ^
       formattedAddress.hashCode ^
       latitude.hashCode ^
-      longitude.hashCode;
+      longitude.hashCode ^
+      hired.hashCode;
   }
 }
