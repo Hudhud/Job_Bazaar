@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_bazaar/screens/detail_page.dart';
@@ -9,11 +10,6 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  Future getTasks() async {
-    var fireStore = Firestore.instance;
-    QuerySnapshot qs = await fireStore.collection('tasks').getDocuments();
-    return qs.documents;
-  }
 
   navigateToDetail(DocumentSnapshot task) {
     Navigator.push(
@@ -30,8 +26,8 @@ class _TasksPageState extends State<TasksPage> {
       appBar: AppBar(
         title: Text("My Tasks"),
       ),
-      body: FutureBuilder(
-        future: getTasks(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('tasks').snapshots(),
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -39,11 +35,11 @@ class _TasksPageState extends State<TasksPage> {
             );
           } else {
             return ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.documents.length,
                 itemBuilder: (_, index) {
                   return Container(
                       child: ListTile(
-                          onTap: () => navigateToDetail(snapshot.data[index]),
+                          onTap: () => navigateToDetail(snapshot.data.documents[index]),
                           subtitle: Container(
                             height: 100.0,
                             width: 100.0,
@@ -54,14 +50,14 @@ class _TasksPageState extends State<TasksPage> {
                                     BorderRadius.all(Radius.circular(7.0))),
                             child: Column(
                               children: <Widget>[
-                                Text(snapshot.data[index].data['title']),
+                                Text(snapshot.data.documents[index].data['title']),
                                 Text("Kr. " +
-                                    snapshot.data[index].data['payment']
+                                    snapshot.data.documents[index].data['payment']
                                         .toString()),
-                                Text(snapshot.data[index].data['hourly'] == true
+                                Text(snapshot.data.documents[index].data['hourly'] == true
                                     ? "per hour"
                                     : "one time"),
-                                Text(snapshot.data[index].data['description']),
+                                Text(snapshot.data.documents[index].data['description']),
                               ],
                             ),
                           )));

@@ -54,7 +54,7 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                       new BorderRadius.all(const Radius.circular(20.0)),
                 ),
                 child: Text(_task.hourly
-                    ? _task.payment.toString() + ' hourly'
+                    ? _task.payment.toString()
                     : _task.payment.toString() + " Kr/ hour"),
               ),
             ),
