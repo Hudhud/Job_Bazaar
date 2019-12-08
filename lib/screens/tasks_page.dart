@@ -26,7 +26,6 @@ class _TasksPageState extends State<TasksPage> {
           title: Text("My Tasks"),
         ),
         body: FutureBuilder<FirebaseUser>(
-            // stream: Firestore.instance.collection('tasks').where('creator', isEqualTo: await FirebaseAuth.instance.currentUser()).snapshots(),
             future: FirebaseAuth.instance.currentUser(),
             builder: (_, user) {
               if(user.connectionState == ConnectionState.waiting) {
