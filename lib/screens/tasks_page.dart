@@ -29,6 +29,11 @@ class _TasksPageState extends State<TasksPage> {
             // stream: Firestore.instance.collection('tasks').where('creator', isEqualTo: await FirebaseAuth.instance.currentUser()).snapshots(),
             future: FirebaseAuth.instance.currentUser(),
             builder: (_, user) {
+              if(user.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Text('loading'),
+                );
+              }
               return StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
                       .collection('tasks')
