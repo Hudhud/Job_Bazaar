@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:job_bazaar/models/task.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,34 +21,28 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('tasks').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return new Text("Loading...");
-
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_left),
-              onPressed: () {},
-            ),
-            title: Text("Copenhagen"),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {},
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: () {},
+        ),
+        title: Text("Copenhagen"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
           ),
-          body: Stack(
-            children: <Widget>[
-              _googleMap(context, snapshot.data.documents),
-              _tasksContainer()
-              //zoominsfunction
-            ],
-          ),
-        );
-      },
+        ],
+      ),
+      body: Stack(
+        children: <Widget>[
+          _googleMap(context),
+          _tasksContainer(),
+          _zoomminusfunction(),
+          _zoomplusfunction(),
+        ],
+      ),
     );
   }
 
@@ -110,29 +103,21 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _googleMap(BuildContext context, List<DocumentSnapshot> documents) {
-    final markers = documents
-        .map((doc) => Task.fromMap(doc.data))
-        .map((doc) => Marker(
-              markerId: MarkerId(doc.placeId),
-              position: LatLng(doc.latitude, doc.longitude),
-              infoWindow: InfoWindow(title: doc.title),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueOrange),
-            ))
-        .toSet();
-
+  Widget _googleMap(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition:
-            CameraPosition(target: LatLng(55.676098, 12.568337), zoom: 10),
+        CameraPosition(target: LatLng(55.676098, 12.568337), zoom: 10),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
-        markers: markers,
+        markers: {
+          // tasksLocationMarker,
+          tasksLocationMarker2,
+        },
       ),
     );
   }
@@ -142,4 +127,50 @@ class HomePageState extends State<HomePage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
   }
+
+  Widget _zoomminusfunction() {
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: IconButton(
+          icon: Icon(Icons.zoom_out,color:Colors.orange),
+          onPressed: () {
+            zoom--;
+            _minus( zoom);
+          }),
+    );
+  }
+  Widget _zoomplusfunction() {
+
+    return Align(
+      alignment: Alignment.topRight,
+      child: IconButton(
+          icon: Icon(Icons.zoom_in,color:Colors.orange),
+          onPressed: () {
+            zoom++;
+            _plus(zoom);
+          }),
+    );
+  }
+  Future<void> _minus(double zoomVal) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng (55.676098, 12.568337), zoom: zoomVal)));
+  }
+  Future<void> _plus(double zoomVal) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(55.676098, 12.568337), zoom: zoomVal)));
+  }
 }
+
+Marker tasksLocationMarker = Marker(
+  markerId: MarkerId('KU'),
+  position: LatLng(55.6802303, 12.5702209),
+  infoWindow: InfoWindow(title: "Københaven Universitet"),
+  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+);
+Marker tasksLocationMarker2 = Marker(
+  markerId: MarkerId('dtu'),
+  position: LatLng(55.7855012, 12.5143188),
+  infoWindow: InfoWindow(title: "DTU Lyngby"),
+  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+);
