@@ -61,6 +61,7 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
             Container(
               padding: EdgeInsets.all(10),
               margin: const EdgeInsets.all(20),
+              width: 450,
               decoration: BoxDecoration(
                 color: Colors.black45,
                 borderRadius: new BorderRadius.all(const Radius.circular(5.0)),
