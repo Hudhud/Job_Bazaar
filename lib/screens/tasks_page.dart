@@ -52,7 +52,6 @@ class _TasksPageState extends State<TasksPage> {
                                     onTap: () => navigateToDetail(
                                         snapshot.data.documents[index]),
                                     subtitle: Container(
-                                      height: 75.0,
                                       width: 75.0,
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
