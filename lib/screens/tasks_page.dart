@@ -10,7 +10,6 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-
   navigateToDetail(DocumentSnapshot task) {
     Navigator.push(
         context,
@@ -23,57 +22,60 @@ class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("My Tasks"),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('tasks').snapshots(),
-        builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Text("Loading..."),
-            );
-          } else {
-            return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (_, index) {
-                  return Container(
-                      child: ListTile(
-                          onTap: () => navigateToDetail(snapshot.data.documents[index]),
-                          subtitle: Container(
-                            height: 100.0,
-                            width: 100.0,
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(7.0))),
-                            child: Column(
-                              children: <Widget>[
-                                Text(snapshot.data.documents[index].data['title']),
-                                Text("Kr. " +
-                                    snapshot.data.documents[index].data['payment']
-                                        .toString()),
-                                Text(snapshot.data.documents[index].data['hourly'] == true
-                                    ? "per hour"
-                                    : "one time"),
-                                Text(snapshot.data.documents[index].data['description']),
-                              ],
-                            ),
-                          )));
-                });
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CreateTaskScreen()),
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.orange,
-      ),
-    );
+        appBar: AppBar(
+          title: Text("My Tasks"),
+        ),
+        body: FutureBuilder<FirebaseUser>(
+            // stream: Firestore.instance.collection('tasks').where('creator', isEqualTo: await FirebaseAuth.instance.currentUser()).snapshots(),
+            future: FirebaseAuth.instance.currentUser(),
+            builder: (_, user) {
+              return StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance
+                      .collection('tasks')
+                      .where('creator', isEqualTo: user.data.uid)
+                      .snapshots(),
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Text("Loading..."),
+                      );
+                    } else {
+                      return ListView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (_, index) {
+                            return Container(
+                                child: ListTile(
+                                    onTap: () => navigateToDetail(
+                                        snapshot.data.documents[index]),
+                                    subtitle: Container(
+                                      height: 75.0,
+                                      width: 75.0,
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.black54,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.0))),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Text(snapshot.data.documents[index]
+                                              .data['title']),
+                                          Text("Kr. " +
+                                              snapshot.data.documents[index]
+                                                  .data['payment']
+                                                  .toString()),
+                                          Text(snapshot.data.documents[index]
+                                                      .data['hourly'] ==
+                                                  true
+                                              ? "per hour"
+                                              : "one time"),
+                                          Text(snapshot.data.documents[index]
+                                              .data['description']),
+                                        ],
+                                      ),
+                                    )));
+                          });
+                    }
+                  });
+            }));
   }
 }
