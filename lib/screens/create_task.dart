@@ -167,6 +167,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           FirebaseUser user =
                               await FirebaseAuth.instance.currentUser();
 
+                          final creator = user?.uid;
+
                           await Firestore.instance.collection('tasks').add({
                             'hourly': _hourly,
                             'title': _title,
@@ -174,7 +176,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             'payment': double.parse(_payment),
                             'date': _date,
                             'place_id': _location.placeId,
-                            'creator': user.uid,
+                            'creator': creator,
+                            'formattedAddress': _location.formattedAddress,
+                            'latitude': _location.latLng.latitude,
+                            'longitude': _location.latLng.longitude,
                           });
                           Navigator.of(context).pop();
                         } on Exception catch (error) {

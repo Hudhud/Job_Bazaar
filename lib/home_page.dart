@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,9 +37,8 @@ class HomePageState extends State<HomePage> {
       body: Stack(
         children: <Widget>[
           _googleMap(context),
-          _tasksContainer(),
-          _zoomminusfunction(),
-          _zoomplusfunction(),
+          _tasksContainer()
+          //zoominsfunction
         ],
       ),
     );
@@ -115,7 +113,7 @@ class HomePageState extends State<HomePage> {
           _controller.complete(controller);
         },
         markers: {
-         // tasksLocationMarker,
+          tasksLocationMarker,
           tasksLocationMarker2,
         },
       ),
@@ -126,39 +124,6 @@ class HomePageState extends State<HomePage> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
-  }
-
-  Widget _zoomminusfunction() {
-
-    return Align(
-      alignment: Alignment.topLeft,
-      child: IconButton(
-          icon: Icon(Icons.zoom_out,color:Colors.orange),
-          onPressed: () {
-            zoom--;
-            _minus( zoom);
-          }),
-    );
-  }
-  Widget _zoomplusfunction() {
-
-    return Align(
-      alignment: Alignment.topRight,
-      child: IconButton(
-          icon: Icon(Icons.zoom_in,color:Colors.orange),
-          onPressed: () {
-            zoom++;
-            _plus(zoom);
-          }),
-    );
-  }
-  Future<void> _minus(double zoomVal) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng (55.676098, 12.568337), zoom: zoomVal)));
-  }
-  Future<void> _plus(double zoomVal) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(55.676098, 12.568337), zoom: zoomVal)));
   }
 }
 
