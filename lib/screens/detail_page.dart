@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_bazaar/models/task.dart';
 import 'package:job_bazaar/screens/applicant_screen.dart';
 import 'package:job_bazaar/screens/edit_task.dart';
 
 class DetailPage extends StatefulWidget {
-  final DocumentSnapshot task;
+  final Task task;
 
   DetailPage({this.task});
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _DetailPageState createState() => _DetailPageState(task);
 }
 
 class _DetailPageState extends State<DetailPage> {
   int selectedRadio;
+  final Task _task;
+
+  _DetailPageState(this._task);
 
   @override
   void initState() {
@@ -31,19 +35,19 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return new StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection('tasks/${widget.task.documentID}/applicants')
+          .collection('tasks/${_task.id}/applicants')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         return Scaffold(
             appBar: AppBar(
-              title: Text(widget.task.data['title']),
+              title: Text(_task.title),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
                     setState(() {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EditTaskScreen(task: widget.task),
+                        builder: (context) => EditTaskScreen(task: _task),
                       ));
                     });
                   },
@@ -72,12 +76,12 @@ class _DetailPageState extends State<DetailPage> {
                           shape: BoxShape.rectangle,
                           color: Colors.orange),
                       child: Center(
-                          child: widget.task.data['hourly'] == true
+                          child: _task.hourly
                               ? Text("Kr. " +
-                                  widget.task.data['payment'].toString() +
+                                  _task.payment.toString() +
                                   " per hour")
                               : Text("Kr. " +
-                                  widget.task.data['payment'].toString() +
+                                  _task.payment.toString() +
                                   " one time"))),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
@@ -117,24 +121,19 @@ class _DetailPageState extends State<DetailPage> {
                                 child: Text("Desciption",
                                     style: TextStyle(color: Colors.orange))),
                             Text(
-                              "\n" + widget.task.data['description'],
+                              "\n" + _task.description,
                             ),
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("\nLocation",
                                     style: TextStyle(color: Colors.orange))),
-                            Text("\n" + widget.task.data['formattedAddress']),
+                            Text("\n" + _task.formattedAddress),
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("\nDate & time",
                                     style: TextStyle(color: Colors.orange))),
                             Text(
-                              "\n" +
-                                  DateTime.fromMicrosecondsSinceEpoch(widget
-                                          .task
-                                          .data['date']
-                                          .microsecondsSinceEpoch)
-                                      .toString(),
+                              "\n" +_task.date.toString(),
                             ),
                           ])),
                   SizedBox(height: 30),
@@ -183,7 +182,7 @@ class _DetailPageState extends State<DetailPage> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task,),
                                   )),
                                 ))
                             .toList(),
@@ -234,7 +233,7 @@ class _DetailPageState extends State<DetailPage> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task,),
                                   )),
                                 ))
                             .toList(),

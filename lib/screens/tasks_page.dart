@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_bazaar/models/task.dart';
 import 'package:job_bazaar/screens/detail_page.dart';
 import 'package:job_bazaar/screens/create_task.dart';
 
@@ -10,7 +11,7 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  navigateToDetail(DocumentSnapshot task) {
+  navigateToDetail(Task task) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -25,10 +26,19 @@ class _TasksPageState extends State<TasksPage> {
         appBar: AppBar(
           title: Text("My Tasks"),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CreateTaskScreen()),
+            );
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.orange,
+        ),
         body: FutureBuilder<FirebaseUser>(
             future: FirebaseAuth.instance.currentUser(),
             builder: (_, user) {
-              if(user.connectionState == ConnectionState.waiting) {
+              if (user.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: Text('loading'),
                 );
@@ -49,8 +59,14 @@ class _TasksPageState extends State<TasksPage> {
                           itemBuilder: (_, index) {
                             return Container(
                                 child: ListTile(
-                                    onTap: () => navigateToDetail(
-                                        snapshot.data.documents[index]),
+                                    onTap: () {
+                                      snapshot.data.documents[index]
+                                              .data['id'] =
+                                          snapshot
+                                              .data.documents[index].documentID;
+                                      return navigateToDetail(Task.fromMap(
+                                          snapshot.data.documents[index].data));
+                                    },
                                     subtitle: Container(
                                       width: 75.0,
                                       padding: EdgeInsets.all(5),
