@@ -1,10 +1,14 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:flutter/cupertino.dart';
+//import 'package:flutter/material.dart';
+//import 'package:job_bazaar/models/task.dart';
 
 class Task {
 
-    Task({
+  Task({
     this.id,
     this.hourly,
     this.title,
@@ -30,7 +34,7 @@ class Task {
   String formattedAddress;
   double latitude;
   double longitude;
-  String hired;
+  String hired; // delete
 
   Task copyWith({
     bool hourly,
@@ -114,33 +118,33 @@ class Task {
     if (identical(this, o)) return true;
 
     return o is Task &&
-      o.id == id &&
-      o.hourly == hourly &&
-      o.title == title &&
-      o.description == description &&
-      o.payment == payment &&
-      o.date == date &&
-      o.placeId == placeId &&
-      o.creator == creator &&
-      o.formattedAddress == formattedAddress &&
-      o.latitude == latitude &&
-      o.longitude == longitude &&
-      o.hired == hired;
+        o.id == id &&
+        o.hourly == hourly &&
+        o.title == title &&
+        o.description == description &&
+        o.payment == payment &&
+        o.date == date &&
+        o.placeId == placeId &&
+        o.creator == creator &&
+        o.formattedAddress == formattedAddress &&
+        o.latitude == latitude &&
+        o.longitude == longitude &&
+        o.hired == hired;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ 
-      hourly.hashCode ^
-      title.hashCode ^
-      description.hashCode ^
-      payment.hashCode ^
-      date.hashCode ^
-      placeId.hashCode ^
-      creator.hashCode ^
-      formattedAddress.hashCode ^
-      latitude.hashCode ^
-      longitude.hashCode ^
-      hired.hashCode;
+    return id.hashCode ^
+    hourly.hashCode ^
+    title.hashCode ^
+    description.hashCode ^
+    payment.hashCode ^
+    date.hashCode ^
+    placeId.hashCode ^
+    creator.hashCode ^
+    formattedAddress.hashCode ^
+    latitude.hashCode ^
+    longitude.hashCode ^
+    hired.hashCode;
   }
 }

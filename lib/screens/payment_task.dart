@@ -1,46 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:job_bazaar/screens/applicant_screen.dart';
+import 'package:job_bazaar/screens/pay_screen.dart';
 import 'package:job_bazaar/screens/edit_task.dart';
-import 'package:job_bazaar/screens/payment_task.dart';
-import 'package:job_bazaar/screens/tasks_page.dart';
+import 'package:job_bazaar/screens/applicant_screen.dart';
 
-class DetailPage extends StatefulWidget {
+class PaymentScreen extends StatefulWidget {
   final DocumentSnapshot task;
 
-  DetailPage({this.task});
+  PaymentScreen({this.task});
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _PaymentScreenState createState() => _PaymentScreenState();
 }
 
-class _DetailPageState extends State<DetailPage> {
-  int selectedRadio;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedRadio = 0;
-  }
-
-  setSelectedRadio(int val) {
-    setState(() {
-      selectedRadio = val;
-      switch (selectedRadio) {
-        case 1:
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => TasksPage()),
-          );
-            break;
-            case 2:
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PaymentScreen(task: widget.task)),
-            );
-              break;
-      }
-    });
-  }
-
+class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder<QuerySnapshot>(
@@ -66,105 +40,135 @@ class _DetailPageState extends State<DetailPage> {
             ),
             body: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0),
-                    height: 130.0,
-                    width: 130.0,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                      width: 120.0,
+                      height: 120.0,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
                         image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('images/job_icon.png'))),
-                  ),
-                  Container(
-                      height: 40.0,
-                      width: 150.0,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(100.0)),
-                          shape: BoxShape.rectangle,
-                          color: Colors.orange),
-                      child: Center(
-                          child: widget.task.data['hourly'] == true
-                              ? Text("Kr. " +
-                                  widget.task.data['payment'].toString() +
-                                  " per hour")
-                              : Text("Kr. " +
-                                  widget.task.data['payment'].toString() +
-                                  " one time"))),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Searching"),
-                      Radio(
-                        value: 1,
-                        groupValue: selectedRadio,
-                        activeColor: Colors.orange,
-                        onChanged: (val) {
-                          print("Radio $val");
-                          setSelectedRadio(val);
-                        },
+                            image: AssetImage("images/kid.png"),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       ),
-                      Text("Assigned"),
-                      Radio(
-                          value: 2,
-                          groupValue: selectedRadio,
-                          activeColor: Colors.orange,
-                          onChanged: (val) {
-                            print("Radio $val");
-                            setSelectedRadio(val);
-                          })
-                    ],
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(
+                            left: 140, right: 140, top: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius:
+                              new BorderRadius.all(const Radius.circular(10.0)),
+                        ),
+                        child: widget.task.data['hourly'] ==
+                                true //Text(_task.hourly
+                            ? Text(widget.task.data['payment'].toString() +
+                                ' hourly')
+                            : Text(widget.task.data['payment'].toString() +
+                                " Kr/ hour")),
                   ),
                   Container(
-                      height: 205.0,
-                      width: 400.0,
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.all(Radius.circular(7.0))),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Desciption",
-                                    style: TextStyle(color: Colors.orange))),
-                            Text(
-                              "\n" + widget.task.data['description'],
-                            ),
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("\nLocation",
-                                    style: TextStyle(color: Colors.orange))),
-                            Text("\n" + widget.task.data['formattedAddress']),
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("\nDate & time",
-                                    style: TextStyle(color: Colors.orange))),
-                            Text(
-                              "\n" +
-                                  DateTime.fromMicrosecondsSinceEpoch(widget
-                                          .task
-                                          .data['date']
-                                          .microsecondsSinceEpoch)
-                                      .toString(),
-                            ),
-                          ])),
-                  SizedBox(height: 30),
+                    padding: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
+                    width: 450,
+                    decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius:
+                          new BorderRadius.all(const Radius.circular(5.0)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        RichText(
+                          text: TextSpan(
+                              style:
+                                  TextStyle(color: Colors.orange, fontSize: 15),
+                              text: 'Description'),
+                        ),
+                        RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12))),
+                        Text(
+                          widget.task.data['description'],
+                        ),
+//                              text: _task.description),
+                        SizedBox(height: 20.0),
+                        RichText(
+                          text: TextSpan(
+                              style:
+                                  TextStyle(color: Colors.orange, fontSize: 15),
+                              text: 'Address'),
+                        ),
+                        RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15))),
+                        Text(widget.task.data['formattedAddress']),
+//                              text: _task.formattedAddress),
+//                        ),
+                        SizedBox(height: 20.0),
+                        RichText(
+                          text: TextSpan(
+                              style:
+                                  TextStyle(color: Colors.orange, fontSize: 15),
+                              text: 'Date & Time'),
+                        ),
+                        RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15))),
+                        Text(
+                          DateTime.fromMicrosecondsSinceEpoch(widget
+                                  .task.data['date'].microsecondsSinceEpoch)
+                              .toString(),
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Center(
+                    child: Column(
+                      children: <Widget>[
+                        RaisedButton(
+                          color: Colors.orange,
+                          textColor: Colors.white,
+                          child: Text('pay helper'),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  PayScreen(task: widget.task),
+                            ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   Row(
                     children: <Widget>[
                       Container(
                         height: 1.5,
-                        color: Colors.white,
+                        color: Color.fromRGBO(100, 100, 100, 50),
                         padding: EdgeInsets.all(40),
                         margin: EdgeInsets.only(left: 80, right: 8),
                       ),
                       Text('Helpers hired'),
                       Container(
                         height: 1.5,
-                        color: Colors.white,
+                        color: Color.fromRGBO(100, 100, 100, 50),
                         padding: EdgeInsets.all(40),
                         margin: EdgeInsets.only(
                           left: 8,
@@ -177,7 +181,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   Column(
                     children: !snapshot.hasData
-                        ? <Widget>[Text('Loading...')]
+                        ? <Widget>[Text('No data...')]
                         : snapshot.data.documents
                             .where((application) =>
                                 application.data['status'] == 'hired')
@@ -208,14 +212,14 @@ class _DetailPageState extends State<DetailPage> {
                     children: <Widget>[
                       Container(
                         height: 1.5,
-                        color: Colors.white,
+                        color: Color.fromRGBO(100, 100, 100, 50),
                         padding: EdgeInsets.all(40),
                         margin: EdgeInsets.only(left: 60, right: 8),
                       ),
                       Text('Helpers interrested'),
                       Container(
                         height: 1.5,
-                        color: Colors.white,
+                        color: Color.fromRGBO(100, 100, 100, 50),
                         padding: EdgeInsets.all(40),
                         margin: EdgeInsets.only(
                           left: 8,
