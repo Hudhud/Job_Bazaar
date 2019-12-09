@@ -11,8 +11,7 @@ class ApplicantScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ApplicantScreenState createState() =>
-      _ApplicantScreenState(uid, task);
+  _ApplicantScreenState createState() => _ApplicantScreenState(uid, task);
 }
 
 class _ApplicantScreenState extends State<ApplicantScreen> {
@@ -131,11 +130,11 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                           await Firestore.instance
                               .collection('profiles/$_uid/hired_tasks')
                               .document(_task.id)
-                              .updateData({
-                                'id': _task.id,
-                                'title': _task.title,
-                                'date': _task.date,
-                              });
+                              .setData({
+                            'id': _task.id,
+                            'title': _task.title,
+                            'date': _task.date,
+                          });
 
                           await Firestore.instance
                               .collection('tasks/${_task.id}/applicants')
@@ -156,7 +155,7 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                         padding: EdgeInsets.all(40),
                         margin: EdgeInsets.only(left: 40, right: 8),
                       ),
-                      Text('Previouse tasks'),
+                      Text('Previous tasks'),
                       Container(
                         height: 1.5,
                         color: Colors.white,
@@ -167,59 +166,63 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                       ),
                     ],
                   ),
-
                   StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('profiles/$_uid/hired_tasks').snapshots(),
-
+                    stream: Firestore.instance
+                        .collection('profiles/$_uid/hired_tasks')
+                        .snapshots(),
                     builder: (context, snapshot) {
-                      if(snapshot.connectionState == ConnectionState.waiting) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text('loading....');
                       }
                       return Column(
                         children: snapshot.data.documents.map((doc) {
-                        print(doc);
+                          print(doc);
 
-                        return Text('data');
-                      }).toList(),
+                          return Container(
+                              padding: EdgeInsets.all(15.0),
+                              margin: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(7.0))),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        doc.data['title'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        new DateTime.fromMicrosecondsSinceEpoch(
+                                                doc.data['date']
+                                                    .microsecondsSinceEpoch)
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Text('4'),
+                                      Icon(Icons.star)
+                                    ],
+                                  ),
+                                ],
+                              ));
+                        }).toList(),
                       );
                     },
                   ),
-
-                  Container(
-                      padding: EdgeInsets.all(15.0),
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.all(Radius.circular(7.0))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'title',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                'date',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text('t'),
-                              Icon(Icons.star)
-                            ],
-                          ),
-                        ],
-                      )),
                 ],
               ),
             )
