@@ -1,11 +1,5 @@
 import 'dart:convert';
 
-//import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:flutter/cupertino.dart';
-//import 'package:flutter/material.dart';
-//import 'package:job_bazaar/models/task.dart';
-
 class Task {
 
   Task({
@@ -34,7 +28,7 @@ class Task {
   String formattedAddress;
   double latitude;
   double longitude;
-  String hired; // delete
+  String hired;
 
   Task copyWith({
     bool hourly,

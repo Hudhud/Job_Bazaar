@@ -1,21 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_bazaar/screens/applicant_screen.dart';
 import 'package:job_bazaar/screens/tasks_page.dart';
 import 'package:slider_button/slider_button.dart';
+import 'package:job_bazaar/models/task.dart';
 
 class PayScreen extends StatefulWidget {
   final DocumentSnapshot task;
+  final Task pay;
 
-  PayScreen({this.task});
+  PayScreen({this.task, this.pay});
 
   @override
-  _PayScreenState createState() => _PayScreenState();
+  _PayScreenState createState() => _PayScreenState(pay);
 }
 
 class _PayScreenState extends State<PayScreen> {
-  String _pay = "paid";
+  final Task _pay;
+
+  _PayScreenState(this._pay);
+
+//  get _pay => null;
 
   @override
   Widget build(BuildContext context) {
@@ -157,14 +164,13 @@ class _PayScreenState extends State<PayScreen> {
                       child: SliderButton(
                     action: () async {
                       try {
-                        Firestore.instance
-                            .collection(
-                                'tasks/${widget.task.documentID}/applicants/${widget.task.documentID}')
-                            .document(
-                                'tasks/${widget.task.documentID}/applicants/${widget.task.documentID}')
-                            .updateData({
-                          'status': _pay,
-                        });
+                        FirebaseUser user =
+                            await FirebaseAuth.instance.currentUser();
+                        print(_pay.toString());
+                        await Firestore.instance
+                            .collection('tasks/${_pay.id}/applicants')
+                            .document(user.uid)
+                            .updateData({'status': 'Paid'});
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TasksPage(),
                         ));

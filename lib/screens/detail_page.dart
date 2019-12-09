@@ -31,12 +31,13 @@ class _DetailPageState extends State<DetailPage> {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => TasksPage()),
           );
-            break;
-            case 2:
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PaymentScreen(task: widget.task)),
-            );
-              break;
+          break;
+        case 2:
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => PaymentScreen(task: widget.task)),
+          );
+          break;
       }
     });
   }
