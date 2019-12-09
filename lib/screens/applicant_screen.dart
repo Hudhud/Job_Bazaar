@@ -1,24 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:job_bazaar/models/task.dart';
 
 class ApplicantScreen extends StatefulWidget {
   final String uid;
-  final String taskId;
+  final Task task;
 
-  ApplicantScreen({Key key, @required this.uid, @required this.taskId})
+  ApplicantScreen({Key key, @required this.uid, @required this.task})
       : super(key: key);
 
   @override
   _ApplicantScreenState createState() =>
-      _ApplicantScreenState(this.uid, this.taskId);
+      _ApplicantScreenState(uid, task);
 }
 
 class _ApplicantScreenState extends State<ApplicantScreen> {
   final String _uid;
-  final String _taskId;
+  final Task _task;
 
-  _ApplicantScreenState(this._uid, this._taskId);
+  _ApplicantScreenState(this._uid, this._task);
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +58,10 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                         direction: Axis.horizontal,
                         allowHalfRating: false,
                         itemCount: 5,
+                        unratedColor: Colors.black87,
                         itemBuilder: (context, _) => Icon(
                           Icons.star,
-                          color: Colors.yellow,
+                          color: Colors.white,
                         ),
                         onRatingUpdate: (rating) {
                           print(rating);
@@ -83,7 +85,7 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                             ),
                             Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("\n18")),
+                                child: Text("18")),
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("\nCompleted tasks",
@@ -91,7 +93,7 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                                     style: TextStyle(color: Colors.orange))),
                             Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("\n7")),
+                                child: Text("7")),
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("\nVerification",
@@ -127,12 +129,16 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                         child: Text('HIRE'),
                         onPressed: () async {
                           await Firestore.instance
-                              .collection('tasks')
-                              .document(_taskId)
-                              .updateData({'hired': _uid});
+                              .collection('profiles/$_uid/hired_tasks')
+                              .document(_task.id)
+                              .updateData({
+                                'id': _task.id,
+                                'title': _task.title,
+                                'date': _task.date,
+                              });
 
                           await Firestore.instance
-                              .collection('tasks/$_taskId/applicants')
+                              .collection('tasks/${_task.id}/applicants')
                               .document(_uid)
                               .updateData({'status': 'hired'});
 
@@ -161,6 +167,59 @@ class _ApplicantScreenState extends State<ApplicantScreen> {
                       ),
                     ],
                   ),
+
+                  StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance.collection('profiles/$_uid/hired_tasks').snapshots(),
+
+                    builder: (context, snapshot) {
+                      if(snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('loading....');
+                      }
+                      return Column(
+                        children: snapshot.data.documents.map((doc) {
+                        print(doc);
+
+                        return Text('data');
+                      }).toList(),
+                      );
+                    },
+                  ),
+
+                  Container(
+                      padding: EdgeInsets.all(15.0),
+                      margin: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.all(Radius.circular(7.0))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'title',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                'date',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text('t'),
+                              Icon(Icons.star)
+                            ],
+                          ),
+                        ],
+                      )),
                 ],
               ),
             )

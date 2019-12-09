@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:job_bazaar/models/task.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class EditTaskScreen extends StatefulWidget {
-  final DocumentSnapshot task;
+  final Task task;
 
   EditTaskScreen({Key key, this.task}) : super(key: key);
 
   @override
-  _EditTaskScreenState createState() => _EditTaskScreenState();
+  _EditTaskScreenState createState() => _EditTaskScreenState(task);
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
+  final Task _task;
   final _formKey = GlobalKey<FormState>();
   bool _hourly = true;
   String _title;
@@ -24,6 +26,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   DateTime _date;
   LocationResult _location;
   var _locationTextFieldsController = TextEditingController();
+
+  _EditTaskScreenState(this._task);
 
   @override
   void dispose() {
@@ -42,25 +46,22 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   @override
   void initState() {
-    _titleController = TextEditingController(text: (widget.task['title']));
+    _titleController = TextEditingController(text: _task.title);
     _descriptionController =
-        TextEditingController(text: (widget.task['description']));
+        TextEditingController(text: _task.description);
     _paymentController =
-        TextEditingController(text: (widget.task['payment'].toString()));
-    Timestamp date = widget.task['date'];
+        TextEditingController(text: _task.payment.toString());
+    
     _dateController = TextEditingController(
-        text: DateFormat('yyyy-MM-dd - kk:mm').format(
-            DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch)));
+        text: DateFormat('yyyy-MM-dd - kk:mm').format(_task.date));
     _locationTextFieldsController =
-        TextEditingController(text: widget.task['formattedAddress']);
+        TextEditingController(text: _task.formattedAddress);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Timestamp dateTimeStamp = widget.task['date'];
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(
-        dateTimeStamp.millisecondsSinceEpoch);
+    DateTime date = _task.date;
 
     return Scaffold(
       appBar: AppBar(
@@ -205,7 +206,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           _formKey.currentState.save();
                           Firestore.instance
                               .collection('tasks')
-                              .document(widget.task.documentID)
+                              .document(_task.id)
                               .updateData({
                             'hourly': _hourly,
                             'title': _title,
