@@ -138,21 +138,20 @@ class _DetailPageState extends State<DetailPage> {
                           ])),
                   SizedBox(height: 30),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         height: 1.5,
                         color: Colors.white,
-                        padding: EdgeInsets.all(40),
-                        margin: EdgeInsets.only(left: 80, right: 8),
+                        padding: EdgeInsets.all(53),
+                        margin: EdgeInsets.all(10),
                       ),
-                      Text('Helpers hired'),
+                      Text('Helpers Hired'),
                       Container(
                         height: 1.5,
                         color: Colors.white,
-                        padding: EdgeInsets.all(40),
-                        margin: EdgeInsets.only(
-                          left: 8,
-                        ),
+                        padding: EdgeInsets.all(53),
+                        margin: EdgeInsets.all(10),
                       ),
                     ],
                   ),
@@ -189,21 +188,20 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   SizedBox(height: 20),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         height: 1.5,
                         color: Colors.white,
-                        padding: EdgeInsets.all(40),
-                        margin: EdgeInsets.only(left: 60, right: 8),
+                        padding: EdgeInsets.all(45),
+                        margin: EdgeInsets.all(10),
                       ),
                       Text('Helpers interrested'),
                       Container(
                         height: 1.5,
                         color: Colors.white,
-                        padding: EdgeInsets.all(40),
-                        margin: EdgeInsets.only(
-                          left: 8,
-                        ),
+                        padding: EdgeInsets.all(45),
+                        margin: EdgeInsets.all(10),
                       ),
                     ],
                   ),
