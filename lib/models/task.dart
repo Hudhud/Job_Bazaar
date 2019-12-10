@@ -28,7 +28,7 @@ class Task {
   String formattedAddress;
   double latitude;
   double longitude;
-  String hired;
+  String hired; // delete
 
   Task copyWith({
     bool hourly,

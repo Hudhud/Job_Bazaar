@@ -54,13 +54,14 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                       new BorderRadius.all(const Radius.circular(20.0)),
                 ),
                 child: Text(_task.hourly
-                    ? _task.payment.toString() + ' hourly'
+                    ? _task.payment.toString()
                     : _task.payment.toString() + " Kr/ hour"),
               ),
             ),
             Container(
               padding: EdgeInsets.all(10),
               margin: const EdgeInsets.all(20),
+              width: 450,
               decoration: BoxDecoration(
                 color: Colors.black45,
                 borderRadius: new BorderRadius.all(const Radius.circular(5.0)),
@@ -166,7 +167,7 @@ class _ApplyTaskScreenState extends State<ApplyTaskScreen> {
                         await Firestore.instance
                             .collection('tasks/${_task.id}/applicants')
                             .document(user.uid)
-                            .setData({'status': 'interested', 'mail': user.email});
+                            .setData({'status': 'interested', 'mail': user.email, 'id': user.uid});
                       } on Exception catch (error) {
                         print(error); //error message here
                       }
