@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_bazaar/models/task.dart';
 import 'package:job_bazaar/screens/applicant_screen.dart';
 import 'package:job_bazaar/screens/edit_task.dart';
+import 'package:job_bazaar/screens/payment_task.dart';
+import 'package:job_bazaar/screens/tasks_page.dart';
 
 class DetailPage extends StatefulWidget {
   final Task task;
@@ -28,6 +30,14 @@ class _DetailPageState extends State<DetailPage> {
   setSelectedRadio(int val) {
     setState(() {
       selectedRadio = val;
+      switch (selectedRadio) {
+        case 2:
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => PaymentScreen(task: _task)),
+          );
+          break;
+      }
     });
   }
 
