@@ -1,30 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_bazaar/models/task.dart';
 import 'package:job_bazaar/screens/pay_screen.dart';
 import 'package:job_bazaar/screens/edit_task.dart';
 import 'package:job_bazaar/screens/applicant_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final DocumentSnapshot task;
+  final Task task;
 
   PaymentScreen({this.task});
 
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  _PaymentScreenState createState() => _PaymentScreenState(task);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final Task _task;
+
+  _PaymentScreenState(this._task);
+
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection('tasks/${widget.task.documentID}/applicants')
+          .collection('tasks/${_task.id}/applicants')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         return Scaffold(
             appBar: AppBar(
-              title: Text(widget.task.data['title']),
+              title: Text(_task.title),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.edit),
@@ -67,11 +72,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           borderRadius:
                               new BorderRadius.all(const Radius.circular(10.0)),
                         ),
-                        child: widget.task.data['hourly'] ==
-                                true //Text(_task.hourly
-                            ? Text(widget.task.data['payment'].toString() +
+                        child: _task.hourly
+                            ? Text(_task.payment.toString() +
                                 ' hourly')
-                            : Text(widget.task.data['payment'].toString() +
+                            : Text(_task.payment.toString() +
                                 " Kr/ hour")),
                   ),
                   Container(
@@ -97,9 +101,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 12))),
                         Text(
-                          widget.task.data['description'],
+                          _task.description,
                         ),
-//                              text: _task.description),
                         SizedBox(height: 20.0),
                         RichText(
                           text: TextSpan(
@@ -111,9 +114,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             text: TextSpan(
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 15))),
-                        Text(widget.task.data['formattedAddress']),
-//                              text: _task.formattedAddress),
-//                        ),
+                        Text(_task.formattedAddress),
                         SizedBox(height: 20.0),
                         RichText(
                           text: TextSpan(
@@ -126,8 +127,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 15))),
                         Text(
-                          DateTime.fromMicrosecondsSinceEpoch(widget
-                                  .task.data['date'].microsecondsSinceEpoch)
+                          _task.date
                               .toString(),
                         ),
                         SizedBox(height: 10.0),
@@ -150,7 +150,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
-                                  PayScreen(task: widget.task),
+                                  PayScreen(task: _task),
                             ));
                           },
                         ),
@@ -202,7 +202,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task),
                                   )),
                                 ))
                             .toList(),
@@ -253,7 +253,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task),
                                   )),
                                 ))
                             .toList(),

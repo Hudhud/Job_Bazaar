@@ -8,19 +8,18 @@ import 'package:slider_button/slider_button.dart';
 import 'package:job_bazaar/models/task.dart';
 
 class PayScreen extends StatefulWidget {
-  final DocumentSnapshot task;
-  final Task pay;
+  final Task task;
 
-  PayScreen({this.task, this.pay});
+  PayScreen({this.task});
 
   @override
-  _PayScreenState createState() => _PayScreenState(pay);
+  _PayScreenState createState() => _PayScreenState(task);
 }
 
 class _PayScreenState extends State<PayScreen> {
-  final Task _pay;
+  final Task _task;
 
-  _PayScreenState(this._pay);
+  _PayScreenState(this._task);
 
 //  get _pay => null;
 
@@ -28,7 +27,7 @@ class _PayScreenState extends State<PayScreen> {
   Widget build(BuildContext context) {
     return new StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection('tasks/${widget.task.documentID}/applicants')
+          .collection('tasks/${_task.id}/applicants')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         return Scaffold(
@@ -100,7 +99,7 @@ class _PayScreenState extends State<PayScreen> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task),
                                   )),
                                 ))
                             .toList(),
@@ -152,7 +151,7 @@ class _PayScreenState extends State<PayScreen> {
                                       .push(MaterialPageRoute(
                                     builder: (context) => ApplicantScreen(
                                         uid: application.documentID,
-                                        taskId: widget.task.documentID),
+                                        task: _task),
                                   )),
                                 ))
                             .toList(),
@@ -166,14 +165,11 @@ class _PayScreenState extends State<PayScreen> {
                       try {
                         FirebaseUser user =
                             await FirebaseAuth.instance.currentUser();
-                        print(_pay.toString());
                         await Firestore.instance
-                            .collection('tasks/${_pay.id}/applicants')
+                            .collection('tasks/${_task.id}/applicants')
                             .document(user.uid)
                             .updateData({'status': 'Paid'});
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => TasksPage(),
-                        ));
+                        Navigator.of(context).popUntil((route) => route.isFirst);
                       } on Exception catch (error) {
                         return _buildErrorDialog(context, error.toString());
                       }

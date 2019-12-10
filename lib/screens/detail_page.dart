@@ -31,15 +31,10 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       selectedRadio = val;
       switch (selectedRadio) {
-        case 1:
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => TasksPage()),
-          );
-          break;
         case 2:
           Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => PaymentScreen(task: widget.task)),
+                builder: (context) => PaymentScreen(task: _task)),
           );
           break;
       }
